@@ -7,7 +7,7 @@ type PropsType = {
 
 const LayoutDefault = (props: PropsType) => {
   return (
-    <div className="prose">
+    <div className="prose prose-sm lg:prose-lg xl:prose-xl">
       <div className="h-screen w-screen">
         <div className="container mx-auto h-full overflow-y-auto flex flex-col">
           <Header />

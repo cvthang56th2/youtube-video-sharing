@@ -9,17 +9,17 @@ const Header = () => {
 
   return (
     <header className="flex-0 p-4 border-b-2 flex flex-wrap justify-between items-center">
-      <div className="w-full text-center md:text-left md:w-auto text-3xl font-bold">
+      <Link to="/" className="w-full text-center md:text-left md:w-auto text-3xl font-bold">
         Funny Movies
-      </div>
+      </Link>
       <div className="w-full text-center md:text-left md:w-auto mt-4 md:mt-0">
         {isLogin ? (
           <div className="flex items-center flex-wrap justify-center">
             <span>Welcome: someone@gmail.com</span>
             <div className="flex items-center">
-              <button className="btn btn-blue ml-2">
+              <Link to="/share-video" className="btn btn-blue ml-2">
                 Share a movie
-              </button>
+              </Link>
               <Confirm onYes={() => setIsLogin(false)}>
                 <button className="btn btn-red ml-2">
                   Logout
