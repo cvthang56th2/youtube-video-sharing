@@ -30,9 +30,9 @@ const PopupLogin = (props: PropsType) => {
           <input type="password" placeholder="Re-Password" className="mt-2" />
         )}
         <div className="text-right">
-          <button className="underline mt-2 italic" onClick={() => setIsRegister(!isRegister)}>
+          <a href="javascript:void(0)" className="underline mt-2 italic" onClick={() => setIsRegister(!isRegister)}>
             {isRegister ? 'Back to Login' : 'Not have account? Registry now.'}
-          </button>
+          </a>
         </div>
       </form>
     </Popup>
