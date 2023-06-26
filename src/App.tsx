@@ -1,13 +1,31 @@
 import './App.css'
 import LayoutDefault from '@/layouts/Default'
+import Home from '@/pages/Home';
+import ShareVideo from '@/pages/user/ShareVideo';
+import ErrorPage from '@/pages/ErrorPage';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/user/share-video",
+    element: <ShareVideo />,
+  },
+]);
 
 function App() {
 
   return (
     <>
       <LayoutDefault>
-        <h1>Youtube Video Sharing</h1>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis tempora quas fuga repellat aliquam asperiores earum adipisci nemo, cumque ullam saepe provident assumenda at consequuntur facere quidem, minus autem dolor?</p>
+        <RouterProvider router={router} />
       </LayoutDefault>
     </>
   )
