@@ -14,6 +14,9 @@
 .btn-green {
   @apply text-white bg-green-500 hover:bg-green-700;
 }
+input {
+  @apply px-3 py-1 border-2 rounded-md w-full focus:outline-blue-400;
+}
 
 @tailwind utilities;
 

@@ -9,16 +9,32 @@ interface PropsType {
 
 const PopupLogin = (props: PropsType) => {
   const [isShow, setIsShow] = useState(false)
-  const login = () => {
-    props.onLoginSuccess()
-    props.close()
+  const [isRegister, setIsRegister] = useState(false)
+  const onSave = () => {
+    if (isRegister) {
+      setIsRegister(false)
+    } else {
+      props.onLoginSuccess()
+      props.close()
+    }
   }
   useEffect(() => {
     setIsShow(props.isShow)
   }, [props.isShow])
   return (
-    <Popup title="Login" isShow={isShow} onSave={login} onCancel={() => props.close()}>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt debitis illum cum, esse maiores ipsum sit tenetur eaque quisquam officiis expedita nemo doloribus perspiciatis, tempora repellendus nostrum sequi neque. Delectus?
+    <Popup title={isRegister ? 'Register' : 'Login'} isShow={isShow} onSave={onSave} onCancel={() => props.close()} saveText={isRegister ? 'Register' : 'Login'}>
+      <form>
+        <input type="email" placeholder="Email" />
+        <input type="password" placeholder="Password" className="mt-2" />
+        {isRegister && (
+          <input type="password" placeholder="Re-Password" className="mt-2" />
+        )}
+        <div className="text-right">
+          <button className="underline mt-2 italic" onClick={() => setIsRegister(!isRegister)}>
+            {isRegister ? 'Back to Login' : 'Not have account? Registry now.'}
+          </button>
+        </div>
+      </form>
     </Popup>
   )
 }
