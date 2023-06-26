@@ -1,14 +1,14 @@
 import './App.css'
+import LayoutDefault from '@/layouts/Default'
 
 function App() {
 
   return (
     <>
-      <div className="min-h-screen flex justify-center items-center">
-        <h1 className="text-3xl font-bold text-blue-600">
-          Vite + React + Typescript + Tailwind CSS 3
-        </h1>
-      </div>
+      <LayoutDefault>
+        <h1>Youtube Video Sharing</h1>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis tempora quas fuga repellat aliquam asperiores earum adipisci nemo, cumque ullam saepe provident assumenda at consequuntur facere quidem, minus autem dolor?</p>
+      </LayoutDefault>
     </>
   )
 }
