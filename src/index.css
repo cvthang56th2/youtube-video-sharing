@@ -1,5 +1,20 @@
 @tailwind base;
 @tailwind components;
+
+.btn {
+  transition: all 0.25s ease-in-out;
+  @apply px-3 py-1 text-sm font-semibold;
+}
+.btn-red {
+  @apply text-white bg-red-500 hover:bg-red-700;
+}
+.btn-blue {
+  @apply text-white bg-blue-500 hover:bg-blue-700;
+}
+.btn-green {
+  @apply text-white bg-green-500 hover:bg-green-700;
+}
+
 @tailwind utilities;
 
 :root {
