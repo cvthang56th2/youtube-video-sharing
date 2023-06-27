@@ -14,8 +14,10 @@ const UserSharedVideo = () => {
 
   const getListVideo = async () => {
     try {
-      const data = await VideoServices.getAllVideos()
-      setVideos(data)
+      if (currentUser) {
+        const data = await VideoServices.getAllVideos({ authorId: currentUser.uid })
+        setVideos(data)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -29,7 +31,7 @@ const UserSharedVideo = () => {
     <div>
       <h2 className='text-center !mt-0'>User Shared Video</h2>
       {currentUser && (
-        <ListVideo videos={videos}></ListVideo>
+        <ListVideo videos={videos} isShowReaction={false}></ListVideo>
       )}
       {!currentUser && (
         <RecommendLogin />
