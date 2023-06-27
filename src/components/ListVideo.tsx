@@ -1,6 +1,9 @@
 import { VideoType } from "@/types/Video"
 import { isElementScrolledIntoView } from "@/utils/utils"
 import { useEffect } from "react"
+import { selectCurrentUser } from '@/store/authSlice'
+import { useSelector } from 'react-redux'
+import VideoServices from '@/firebase/video/video'
 
 type PropsType = {
   videos: VideoType[],
@@ -8,6 +11,8 @@ type PropsType = {
 }
 
 const ListVideo = ({ videos, isShowReaction }: PropsType) => {
+  const currentUser = useSelector(selectCurrentUser)
+
   const lazyLoadIframe = () => {
     const mainEl = document.querySelector('main') as HTMLElement
     for (const iframe of document.querySelectorAll('iframe.video-iframe')) {
@@ -17,6 +22,29 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
       }
     }
   }
+
+  const checkIsLiked = (video: VideoType): boolean => video.likedBy.includes(currentUser?.uid || '')
+  const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
+  const reaction = (video: VideoType, type: 'like' | 'dislike') => {
+    if (!currentUser || !video.id) {
+      return
+    }
+    const field = type === 'like' ? 'likedBy' : 'dislikedBy'
+    const oppositeField = field === 'likedBy' ? 'dislikedBy' : 'likedBy'
+    const { uid } = currentUser
+    const index = video[field].findIndex((id: string) => id === uid)
+    if (index === -1) {
+      video[field].push(uid)
+    } else {
+      video[field].splice(index, 1)
+    }
+    video[oppositeField] = video[oppositeField].filter((id: string) => id !== uid)
+    VideoServices.updateVideo(video.id, {
+      [field]: video[field],
+      [oppositeField]: video[oppositeField]
+    })
+  }
+
   useEffect(() => {
     lazyLoadIframe()
     const mainEl = document.querySelector('main') as HTMLElement
@@ -25,6 +53,7 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
       mainEl.removeEventListener('scroll', lazyLoadIframe)
     }
   })
+
   return (
     <>
       {videos.map((videoObj, vIndex) => (
@@ -44,8 +73,8 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
             <div>Shared by: { videoObj.authorEmail }</div>
             {isShowReaction && (
               <div className="flex items-center">
-                <button className="btn font-bold border-2 rounded-sm text-blue-600 hover:text-white hover:bg-blue-600">Like</button>
-                <button className="btn font-bold border-2 rounded-sm text-gray-600 hover:text-white hover:bg-gray-600 ml-4">DisLike</button>
+                <button onClick={() => reaction(videoObj, 'like')} className={["btn font-bold border-2 rounded-sm hover:scale-125", checkIsLiked(videoObj) ? 'text-white bg-blue-600 scale-125' : 'text-blue-600 hover:text-white hover:bg-blue-600'].join(' ')}>Like</button>
+                <button onClick={() => reaction(videoObj, 'dislike')} className={["btn font-bold border-2 rounded-sm hover:scale-125 ml-4", checkIsDisLiked(videoObj) ? 'text-white bg-gray-600 scale-125' : 'text-gray-600 hover:text-white hover:bg-gray-600'].join(' ')}>DisLike</button>
               </div>
             )}
             <div className="flex">
