@@ -1,11 +1,20 @@
 import Header from '@/layouts/partials/Header'
 import Footer from '@/layouts/partials/Footer'
+import UserServices from '@/firebase/user/user'
+import { useEffect } from 'react'
 
 type PropsType = {
   children: React.ReactNode
 }
 
 const LayoutDefault = (props: PropsType) => {
+  const  checkLogin = async () => {
+    const data = await UserServices.getUserById('1')
+    console.log(data)
+  }
+  useEffect(() => {
+    checkLogin()
+  }, [])
   return (
     <div className="prose prose-sm lg:prose-lg xl:prose-xl">
       <div className="h-screen w-screen">
