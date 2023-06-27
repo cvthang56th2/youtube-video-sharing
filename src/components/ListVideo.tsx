@@ -34,6 +34,7 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
               <iframe
                 data-src={`https://www.youtube.com/embed/${videoObj.videoId}`}
                 className="w-full h-full absolute inset-0 z-1 video-iframe"
+                allowFullScreen
               >
               </iframe>
             </div>
