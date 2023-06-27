@@ -41,7 +41,7 @@ const Header = () => {
           </div>
         ) : (
           <>
-            <button className="btn btn-green" onClick={() => setIsShowPopupLogin(true)}>
+            <button id="login-btn" className="btn btn-green" onClick={() => setIsShowPopupLogin(true)}>
               Login / Register
             </button>
             <PopupLogin isShow={isShowPopupLogin} close={() => setIsShowPopupLogin(false)} />

@@ -14,13 +14,14 @@ import {
 import { db } from '../config';
 import { uid } from 'uid';
 import { snapshotToArray } from '@/utils/utils';
+import { VideoType } from '@/types/Video';
 
 const VIDEO = 'videos';
 
 class VideoServices {
   private unsubscribeVideos: (() => void) | undefined;
 
-  createVideo(data: any) {
+  createVideo(data: VideoType) {
     return new Promise<void>((resolve, reject) => {
       try {
         const id = data.id || uid(8);
@@ -39,7 +40,7 @@ class VideoServices {
     });
   }
 
-  updateVideo(videoId: string, data: any) {
+  updateVideo(videoId: string, data: {[key: string]: unknown}) {
     return new Promise<void>((resolve, reject) => {
       try {
         const today = new Date();
@@ -67,14 +68,15 @@ class VideoServices {
     });
   }
 
-  async getAllVideos(options: any = {}) {
+  async getAllVideos(): Promise<any> {
     try {
-      const q = query(collection(db, VIDEO), orderBy("pid"));
+      const q = query(collection(db, VIDEO), orderBy("createdAt"));
       const querySnapshot = await getDocs(q);
       return snapshotToArray(querySnapshot);
     } catch (error) {
       console.log('error', error);
     }
+    return []
   }
 
   getVideosSnapshot(callback: (videos: any[]) => void, { status }: { status?: string }) {

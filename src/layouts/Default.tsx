@@ -17,7 +17,7 @@ const LayoutDefault = (props: PropsType) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  useEffect(() => (() => {
     AuthServices.onAuthStateChanged(async (res) => {
       const { uid } = res || {}
       if (uid) {
@@ -28,7 +28,7 @@ const LayoutDefault = (props: PropsType) => {
       }
       setIsLoaded(true)
     })
-  }, [])
+  }), [])
 
   return (
     <div className="prose prose-sm lg:prose-lg xl:prose-xl">

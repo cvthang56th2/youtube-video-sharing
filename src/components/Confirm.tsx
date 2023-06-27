@@ -1,5 +1,5 @@
 import Popup from "@/components/Popup"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 interface PropsType {
   children: React.ReactNode,

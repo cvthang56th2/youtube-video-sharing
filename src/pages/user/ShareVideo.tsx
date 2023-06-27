@@ -1,22 +1,23 @@
 import { FormEvent, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+
+import VideoServices from '@/firebase/video/video'
+
+import { selectCurrentUser } from '@/store/authSlice'
 import { getYoutubeInfoUrl } from '@/constants/constants'
+import { YoutubeVideo } from '@/types/Video'
 
 type YoutubeVideoData = {
   valid: boolean,
-  data?: {
-    videoId: string,
-    title: string,
-    description: string
-    thumbnails: {
-      url: string,
-      width: number,
-      height: number
-    }[]
-  }
+  data?: YoutubeVideo
 }
 
 const ShareVideo = () => {
+  const currentUser = useSelector(selectCurrentUser)
+  const navigate = useNavigate();
+
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
 
@@ -54,32 +55,57 @@ const ShareVideo = () => {
     event.preventDefault()
     setIsSubmitted(true)
     try {
-      const data = await getYoutubeData(youtubeUrl)
-      // TODO: save to db and redirect to shared list
-      console.log(data)
+      const { valid, data } = await getYoutubeData(youtubeUrl)
+      if (!valid || !data) {
+        alert('Link video not valid.')
+        return
+      }
+      await VideoServices.createVideo({
+        ...data,
+        authorId: currentUser.uid,
+        authorEmail: currentUser.email,
+      })
+      alert('Success!')
+      navigate("/user-shared-video");
     } catch (error) {
       console.log(error)
     }
     setIsSubmitted(false)
   }
 
+  const openLogin = () => {
+    const loginBtn = document.querySelector('#login-btn') as HTMLElement
+    if (loginBtn) {
+      loginBtn.click()
+    }
+  }
+
   return (
     <div className="flex items-center justify-center h-full">
-      <form className="rounded-md border-2 p-10" onSubmit={submitVideo}>
+      <div className="rounded-md border-2 p-10">
         <h1>Share a Youtube movie</h1>
-        <div className="flex items-center">
-          <div className="w-1/3 pr-2">Youtube URL</div>
-          <div className="w-2/3">
-            <input type="text" value={youtubeUrl} onChange={handleChangeUrl} />
+        {currentUser ? (
+          <form onSubmit={submitVideo}>
+            <div className="flex items-center">
+              <div className="w-1/3 pr-2">Youtube URL</div>
+              <div className="w-2/3">
+                <input type="text" value={youtubeUrl} onChange={handleChangeUrl} />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-1/3"></div>
+              <div className="w-2/3">
+                <button disabled={isSubmitted} className={["btn w-full mt-2 btn-green font-bold", isSubmitted ? 'opacity-50' : ''].join(' ')}>Share</button>
+              </div>
+            </div>
+          </form>
+        ) : (
+          <div className='text-center'>
+            <p>You are not logged in.</p>
+            <button className='btn btn-green text-base px-5 py-2' onClick={() => openLogin()}>Login / Register</button>
           </div>
-        </div>
-        <div className="flex items-center">
-          <div className="w-1/3"></div>
-          <div className="w-2/3">
-            <button disabled={isSubmitted} className={["btn w-full mt-2 btn-green font-bold", isSubmitted ? 'opacity-50' : ''].join(' ')}>Share</button>
-          </div>
-        </div>
-      </form>
+        )}
+      </div>
     </div>
   )
 }
