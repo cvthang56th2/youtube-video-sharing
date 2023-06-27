@@ -1,10 +1,22 @@
-import PopupLogin from "@/components/PopupLogin"
-import Confirm from "@/components/Confirm"
 import { useState } from "react"
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentUser, setCurrentUser } from '@/store/authSlice'
+
+import PopupLogin from "@/components/PopupLogin"
+import Confirm from "@/components/Confirm"
+
+import AuthServices from '@/firebase/auth/auth'
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false)
+  const currentUser = useSelector(selectCurrentUser)
+  const dispatch = useDispatch()
+
+  const logout = () => {
+    AuthServices.logout()
+    dispatch(setCurrentUser(null))
+  }
+
   const [isShowPopupLogin, setIsShowPopupLogin] = useState(false)
 
   return (
@@ -13,14 +25,14 @@ const Header = () => {
         Funny Movies
       </Link>
       <div className="w-full text-center md:text-left md:w-auto mt-4 md:mt-0">
-        {isLogin ? (
+        {currentUser ? (
           <div className="flex items-center flex-wrap justify-center">
             <span>Welcome: someone@gmail.com</span>
             <div className="flex items-center">
               <Link to="/share-video" className="btn btn-blue ml-2">
                 Share a movie
               </Link>
-              <Confirm onYes={() => setIsLogin(false)}>
+              <Confirm onYes={() => logout()}>
                 <button className="btn btn-red ml-2">
                   Logout
                 </button>
@@ -32,7 +44,7 @@ const Header = () => {
             <button className="btn btn-green" onClick={() => setIsShowPopupLogin(true)}>
               Login / Register
             </button>
-            <PopupLogin isShow={isShowPopupLogin} onLoginSuccess={() => setIsLogin(true)} close={() => setIsShowPopupLogin(false)} />
+            <PopupLogin isShow={isShowPopupLogin} close={() => setIsShowPopupLogin(false)} />
           </>
         )}
       </div>

@@ -10,10 +10,10 @@ const Confirm = (props: PropsType) => {
   const [isShow, setIsShow] = useState(false)
   return (
     <>
-      <div onClick={() => setIsShow(true)}>
+      <div onClick={() => setIsShow(true)} className="inline-flex">
         {props.children}
       </div>
-      <Popup title="Confirm" isShow={isShow} onSave={() => props.onYes()} onCancel={() => setIsShow(false)} saveText="Yes" cancelText="No" height={'unset'}>
+      <Popup title="Confirm" isShow={isShow} onSave={() => props.onYes()} onCancel={() => setIsShow(false)} saveText="Yes" cancelText="No">
         Are you sure to do this action?
       </Popup>
     </>
