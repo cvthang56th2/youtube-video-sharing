@@ -24,13 +24,17 @@ const Header = () => {
       <Link to="/" className="w-full text-center md:text-left md:w-auto text-3xl font-bold">
         Funny Movies
       </Link>
-      <div className="w-full text-center md:text-left md:w-auto mt-4 md:mt-0">
+      <div className="w-full text-center md:text-left md:w-auto mt-4 lg:mt-0">
         {currentUser ? (
           <div className="flex items-center flex-wrap justify-center">
-            <span>Welcome: someone@gmail.com</span>
+            <span>Welcome: { currentUser.email }</span>
             <div className="flex items-center">
+              <button className="btn btn-purple ml-2">Notification <span className="ml-2 bg-white px-[6px] rounded-full text-purple-500 font-semibold inline-block">0</span></button>
               <Link to="/share-video" className="btn btn-blue ml-2">
                 Share a movie
+              </Link>
+              <Link to="/user-shared-video" className="btn btn-pink ml-2">
+                My Video
               </Link>
               <Confirm onYes={() => logout()}>
                 <button className="btn btn-red ml-2">

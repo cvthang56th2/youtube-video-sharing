@@ -1,17 +1,23 @@
+import { useEffect, useState } from 'react'
+
+import VideoServices from '@/firebase/video/video'
 import ListVideo from '@/components/ListVideo'
+import { VideoType } from '@/types/Video'
 
 const Home = () => {
-  const videos = [...new Array(50).fill(0)].map((_e, i) => ({
-    id: i,
-    title: `Video ${i}`,
-    author: 'author@abc.de',
-    like: 99,
-    dislike: 9,
-    description: `Description ${i}`,
-  }))
+  const [listVideos, setListVideos] = useState<VideoType[]>([])
+  const snapshotVideos = () => {
+    VideoServices.getVideosSnapshot((videos: VideoType[]) => {
+      setListVideos(videos)
+    })
+  }
+  useEffect(() => (() => {
+    snapshotVideos()
+  }), [])
   return (
     <>
-      <ListVideo videos={videos} isShowReaction />
+      <h1 className='text-center'>List Video</h1>
+      <ListVideo videos={listVideos} isShowReaction />
     </>
   )
 }

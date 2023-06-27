@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config';
 import { snapshotToArray } from '@/utils/utils';
+import { UserType } from '@/types/User';
 
 const USERS = 'users';
 
@@ -25,7 +26,7 @@ class UserServices {
     }
   }
 
-  create(id: string, data: any) {
+  create(id: string, data: UserType) {
     try {
       const today = new Date();
       return setDoc(doc(db, USERS, id), {
@@ -84,7 +85,7 @@ class UserServices {
     }
   }
 
-  update(id: string, data: any) {
+  update(id: string, data: {[key: string]: unknown} = {}) {
     try {
       return setDoc(
         doc(db, USERS, id),

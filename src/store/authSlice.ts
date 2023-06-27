@@ -1,7 +1,8 @@
+import { UserType } from '@/types/User';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
-  currentUser: unknown | null;
+  currentUser: UserType | null;
 }
 
 const initialState: AuthState = {
@@ -12,7 +13,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCurrentUser: (state, action: PayloadAction<unknown | null>) => {
+    setCurrentUser: (state, action: PayloadAction<UserType | null>) => {
       state.currentUser = action.payload;
     },
   },

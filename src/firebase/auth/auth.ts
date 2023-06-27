@@ -12,11 +12,13 @@ import {
 import UserServices from '../user/user';
 
 class AuthServices {
-  onAuthStateChanged(cb: (user: any) => void) {
+  onAuthStateChanged(cb: (user: unknown) => void) {
     return onAuthStateChanged(auth, cb);
   }
 
-  async register(email: string, password: string, options: any = {}) {
+  async register(email: string, password: string, options: {userName: string} = {
+    userName: ''
+  }) {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const { userName } = options;
     const { uid } = res.user;

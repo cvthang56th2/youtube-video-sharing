@@ -8,6 +8,7 @@ import VideoServices from '@/firebase/video/video'
 import { selectCurrentUser } from '@/store/authSlice'
 import { getYoutubeInfoUrl } from '@/constants/constants'
 import { YoutubeVideo } from '@/types/Video'
+import RecommendLogin from '@/components/RecommendLogin';
 
 type YoutubeVideoData = {
   valid: boolean,
@@ -39,14 +40,13 @@ const ShareVideo = () => {
     if (!video?.snippet) {
       return { valid: false }
     }
-    const { title, description, thumbnails } = video.snippet;
+    const { title, description } = video.snippet;
     return {
       valid: true,
       data: {
         videoId,
         title,
         description,
-        thumbnails
       }
     }
   }
@@ -60,24 +60,21 @@ const ShareVideo = () => {
         alert('Link video not valid.')
         return
       }
-      await VideoServices.createVideo({
-        ...data,
-        authorId: currentUser.uid,
-        authorEmail: currentUser.email,
-      })
-      alert('Success!')
-      navigate("/user-shared-video");
+      if (currentUser) {
+        await VideoServices.createVideo({
+          ...data,
+          authorId: currentUser.uid,
+          authorEmail: currentUser.email,
+          likedBy: [],
+          dislikedBy: []
+        })
+        alert('Success!')
+        navigate("/user-shared-video");
+      }
     } catch (error) {
       console.log(error)
     }
     setIsSubmitted(false)
-  }
-
-  const openLogin = () => {
-    const loginBtn = document.querySelector('#login-btn') as HTMLElement
-    if (loginBtn) {
-      loginBtn.click()
-    }
   }
 
   return (
@@ -100,10 +97,7 @@ const ShareVideo = () => {
             </div>
           </form>
         ) : (
-          <div className='text-center'>
-            <p>You are not logged in.</p>
-            <button className='btn btn-green text-base px-5 py-2' onClick={() => openLogin()}>Login / Register</button>
-          </div>
+          <RecommendLogin />
         )}
       </div>
     </div>

@@ -11,14 +11,14 @@ interface PropsType {
 
 const PopupLogin = (props: PropsType) => {
   const [formLogin, setFormLogin] = useState({
-    email: 'cvthang56th2@gmail.com',
-    password: '123456'
+    email: '',
+    password: ''
   })
   const [formRegister, setFormRegister] = useState({
-    userName: 'Thang',
-    email: 'cvthang56th2@gmail.com',
-    password: '123456',
-    rePassword: '123456',
+    userName: '',
+    email: '',
+    password: '',
+    rePassword: '',
   })
   const [isShow, setIsShow] = useState(false)
   const [isRegister, setIsRegister] = useState(false)

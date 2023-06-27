@@ -20,6 +20,12 @@
 .btn-green {
   @apply text-white bg-green-500 hover:bg-green-700;
 }
+.btn-purple {
+  @apply text-white bg-purple-500 hover:bg-purple-700;
+}
+.btn-pink {
+  @apply text-white bg-pink-500 hover:bg-pink-700;
+}
 input {
   @apply px-3 py-1 border-2 rounded-md w-full focus:outline-blue-400;
 }
