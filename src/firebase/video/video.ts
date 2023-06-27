@@ -68,9 +68,12 @@ class VideoServices {
     });
   }
 
-  async getAllVideos(): Promise<VideoType[]> {
+  async getAllVideos(queryOptions?: { authorId?: string }): Promise<VideoType[]> {
     try {
-      const q = query(collection(db, VIDEO), orderBy("createdAt"));
+      let q = query(collection(db, VIDEO), orderBy("createdAt"))
+      if (queryOptions?.authorId) {
+        q = query(q, where("authorId", "==", queryOptions.authorId))
+      }
       const querySnapshot = await getDocs(q);
       return snapshotToArray(querySnapshot) as VideoType[];
     } catch (error) {
