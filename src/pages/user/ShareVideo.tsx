@@ -1,10 +1,18 @@
 import { FormEvent, useState } from 'react'
 import axios from 'axios'
+import { getYoutubeInfoUrl } from '@/constants/constants'
 
 type YoutubeVideoData = {
   valid: boolean,
   data?: {
-    videoId: string
+    videoId: string,
+    title: string,
+    description: string
+    thumbnails: {
+      url: string,
+      width: number,
+      height: number
+    }[]
   }
 }
 
@@ -24,11 +32,19 @@ const ShareVideo = () => {
     }
     const videoId = match[7]
 
-    // TODO: get youtube title, description, thumbnail,.... and save to db
+    const { data } = await axios(getYoutubeInfoUrl(videoId, import.meta.env.VITE_YOUTUBE_API_KEY))
+    const video = data?.items[0];
+    if (!video?.snippet) {
+      return { valid: false }
+    }
+    const { title, description, thumbnails } = video.snippet;
     return {
-      valid,
+      valid: true,
       data: {
-        videoId
+        videoId,
+        title,
+        description,
+        thumbnails
       }
     }
   }
@@ -38,6 +54,7 @@ const ShareVideo = () => {
     setIsSubmitted(true)
     try {
       const data = await getYoutubeData(youtubeUrl)
+      // TODO: save to db and redirect to shared list
       console.log(data)
     } catch (error) {
       console.log(error)
