@@ -13,16 +13,6 @@ type PropsType = {
 const ListVideo = ({ videos, isShowReaction }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
 
-  const lazyLoadIframe = () => {
-    const mainEl = document.querySelector('main') as HTMLElement
-    for (const iframe of document.querySelectorAll('iframe.video-iframe')) {
-      const dataSrc = iframe.getAttribute('data-src')
-      if (dataSrc && !iframe.getAttribute('src') && isElementScrolledIntoView(mainEl, iframe as HTMLElement)) {
-        iframe.setAttribute('src', dataSrc)
-      }
-    }
-  }
-
   const checkIsLiked = (video: VideoType): boolean => video.likedBy.includes(currentUser?.uid || '')
   const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
   const reaction = (video: VideoType, type: 'like' | 'dislike') => {
@@ -45,6 +35,16 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
     })
   }
 
+  const lazyLoadIframe = () => {
+    const mainEl = document.querySelector('main') as HTMLElement
+    for (const iframe of document.querySelectorAll('iframe.video-iframe')) {
+      const dataSrc = iframe.getAttribute('data-src')
+      if (dataSrc && !iframe.getAttribute('src') && isElementScrolledIntoView(mainEl, iframe as HTMLElement)) {
+        iframe.setAttribute('src', dataSrc)
+      }
+    }
+  }
+
   useEffect(() => {
     lazyLoadIframe()
     const mainEl = document.querySelector('main') as HTMLElement
@@ -52,7 +52,7 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
     return () => {
       mainEl.removeEventListener('scroll', lazyLoadIframe)
     }
-  })
+  }, [videos])
 
   return (
     <>

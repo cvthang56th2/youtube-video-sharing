@@ -22,17 +22,18 @@ class VideoServices {
   private unsubscribeVideos: (() => void) | undefined;
 
   createVideo(data: VideoType) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       try {
         const id = data.id || uid(8);
         const today = new Date();
         const ref = doc(db, VIDEO, id);
         data.id = id;
-        resolve(setDoc(ref, {
+        setDoc(ref, {
           updatedAt: Timestamp.fromDate(today),
           createdAt: Timestamp.fromDate(today),
           ...data
-        }));
+        });
+        resolve(id)
       } catch (err) {
         console.error('error create video', err);
         reject(err);
@@ -70,7 +71,7 @@ class VideoServices {
 
   async getAllVideos(queryOptions?: { authorId?: string }): Promise<VideoType[]> {
     try {
-      let q = query(collection(db, VIDEO), orderBy("createdAt"))
+      let q = query(collection(db, VIDEO), orderBy("createdAt", 'desc'))
       if (queryOptions?.authorId) {
         q = query(q, where("authorId", "==", queryOptions.authorId))
       }

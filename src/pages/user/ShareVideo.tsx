@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 
 import VideoServices from '@/firebase/video/video'
+import NotificationServices from '@/firebase/notification/notification'
 
 import { selectCurrentUser } from '@/store/authSlice'
 import { getYoutubeInfoUrl } from '@/constants/constants'
@@ -61,12 +62,20 @@ const ShareVideo = () => {
         return
       }
       if (currentUser) {
-        await VideoServices.createVideo({
+        const newVideoId = await VideoServices.createVideo({
           ...data,
           authorId: currentUser.uid,
           authorEmail: currentUser.email,
           likedBy: [],
           dislikedBy: []
+        })
+        await NotificationServices.createNotification({
+          videoId: newVideoId || '',
+          ytVideoId: data.videoId,
+          videoTitle: data.title,
+          authorId: currentUser.uid,
+          authorEmail: currentUser.email,
+          seenBy: [currentUser.uid]
         })
         alert('Success!')
         navigate("/user-shared-video");
