@@ -50,7 +50,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
                   <div className="flex-0">
                     <div className="w-full h-[300px] xl:h-[400px] relative">
                       <iframe
-                        src={`https://www.youtube.com/embed/${videoData.ytVideoId}`}
+                        src={`https://www.youtube.com/embed/${videoData.ytVideoId}?autoplay=1`}
                         className="w-full h-full absolute inset-0 video-iframe"
                         title={videoData.title}
                         allowFullScreen
