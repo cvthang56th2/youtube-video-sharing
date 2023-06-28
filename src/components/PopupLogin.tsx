@@ -79,7 +79,7 @@ const PopupLogin = (props: PropsType) => {
     setIsShow(props.isShow)
   }, [props.isShow])
   return (
-    <Popup title={isRegister ? 'Register' : 'Login'} isShow={isShow} onSave={onSave} onCancel={() => props.close()} saveText={isRegister ? 'Register' : 'Login'}>
+    <Popup title={isRegister ? 'Register' : 'Login'} isShow={isShow} onSave={onSave} onCancel={() => props.close()} saveText={isRegister ? 'Register' : 'Login'} wrapperClasses="z-[99]">
       <form>
         {isRegister ? (
           <>
