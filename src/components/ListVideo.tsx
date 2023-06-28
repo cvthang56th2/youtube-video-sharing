@@ -16,6 +16,7 @@ type PropsType = {
 
 const ListVideo = ({ videos, isShowReaction }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
+  const [videoShownMore, setVideoShownMore] = useState<{[key: string]: boolean}>({})
   const [isShowPopupVideo, setIsShowPopupVideo] = useState(false)
   const [watchingVideoId, setWatchingVideoId] = useState('')
 
@@ -45,6 +46,13 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
     setIsShowPopupVideo(true)
   }
 
+  const toggleShowMore = (videoId: string) => {
+    setVideoShownMore({
+      ...videoShownMore,
+      [videoId]: !videoShownMore[videoId]
+    })
+  }
+
   useEffect(() => {
     if (!isShowPopupVideo) {
       setWatchingVideoId('')
@@ -55,7 +63,7 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
   return (
     <>
       {videos.map((videoObj, vIndex) => (
-        <div className='flex flex-wrap -mx-4 mb-7 last:mb-0 py-2' key={`video-${vIndex}`}>
+        <div className='flex flex-wrap -mx-4 last:mb-0 py-4 border-b-2' key={`video-${vIndex}`}>
           <div className='w-full lg:w-5/12 px-4'>
             <div className="w-full h-[200px] md:h-[400px] lg:h-[350px] bg-gray-200 relative group cursor-pointer" onClick={() => watchVideo(videoObj.id)}>
               <img src={videoObj.thumbnailUrl} alt={videoObj.title} className="absolute inset-0 w-full h-full object-cover !m-0 pointer-events-none" />
@@ -78,7 +86,17 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
               <span><span className="font-semibold">Dislike:</span> { videoObj.dislikedBy?.length || 0 }</span>
             </div>
             <div className="font-semibold">Description:</div>
-            <div>{ videoObj.description }</div>
+            <div>
+              {videoObj.description.length <= 200 ? videoObj.description : (
+                <div>
+                  { videoShownMore[videoObj.id] ? videoObj.description : videoObj.description.substring(0, 200) + '...' }
+                  <span className='underline text-blue-500 hover:text-blue-500 ml-2 cursor-pointer' onClick={() => toggleShowMore(videoObj.id)}>{videoShownMore[videoObj.id] ? 'Close' : 'View All'}</span>
+                </div>
+              )}
+            </div>
+            <div className='mt-5'>
+              <button className='btn btn-blue text-lg' onClick={() => watchVideo(videoObj.id)}>Watch Now</button>
+            </div>
           </div>
         </div>
       ))}
