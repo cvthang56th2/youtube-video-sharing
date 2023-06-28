@@ -42,6 +42,9 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
   return (
     <>
       <div className={["w-screen h-screen fixed inset-0 z-50 overflow-y-auto flex items-center justify-center", isShow ? 'bg-[rgba(0,0,0,0.2)]' : 'pointer-events-none'].join(' ')} onClick={() => close()}>
+        {isShow && (
+          <button className="absolute top-0 right-0 bg-white rounded-full text-3xl px-[6px] hover:text-red-500" onClick={() => close()}>&#10005;</button>
+        )}
         <div className={["bg-white w-[800px] max-w-[95%] max-h-[95%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out relative", isShow ? 'transform-none' : 'scale-0'].join(' ')} onClick={preventEvents}>
           {isShow && (
             <>
