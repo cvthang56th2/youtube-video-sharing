@@ -1,21 +1,33 @@
-import { QuerySnapshot } from 'firebase/firestore';
+import moment from 'moment'
+import { QuerySnapshot, DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 
-export const snapshotToArray = (snapshot: QuerySnapshot) => {
-  const data: unknown[] = [];
+export const snapshotToArray = (snapshot: QuerySnapshot<DocumentData>): DocumentData[] => {
+  const data: DocumentData[] = [];
   if (snapshot) {
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
       data.push(doc.data());
     });
   }
   return data;
 };
 
-export function isElementScrolledIntoView(container: HTMLElement, element: HTMLElement) {
-  const containerRect = container.getBoundingClientRect();
-  const elementRect = element.getBoundingClientRect();
 
-  return (
-    elementRect.top >= containerRect.top &&
-    elementRect.bottom <= containerRect.bottom
-  );
-}
+export const formatDate = (date: Date | Timestamp | number | string | undefined, format = 'DD/MM/YYYY hh:mm'): string => {
+  if (!date) {
+    return '';
+  }
+
+  if (date instanceof Timestamp) {
+    date = date.toDate();
+  }
+
+  if (typeof date === 'number') {
+    date = new Date(date);
+  }
+
+  if (date instanceof Date && !isNaN(date.getTime())) {
+    return moment(date).format(format);
+  }
+
+  return String(date);
+};

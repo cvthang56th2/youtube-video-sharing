@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 
 import VideoServices from '@/firebase/video/video'
+import UserServices from '@/firebase/user/user'
 import NotificationServices from '@/firebase/notification/notification'
 
 import { selectCurrentUser } from '@/store/authSlice'
@@ -28,26 +29,33 @@ const ShareVideo = () => {
   }
 
   const getYoutubeData = async (url: string) : Promise<YoutubeVideoData> => {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
-    const valid = !!(match && match[7].length === 11)
-    if (!valid) {
-      return { valid }
+    let ytVideoId
+    const shortsRegExp = /^.*((youtu.be\/shorts\/)|(youtube.com\/shorts\/)|(youtube.com\/[^/]+\/video\/)|(youtu.be\/[^/]+\/video\/))\??v?=?([^#&?]*).*/;
+    const shortsMatch = url.match(shortsRegExp);
+    if (shortsMatch && shortsMatch[6].length == 11) {
+      ytVideoId = shortsMatch[6]
+    } else {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = url.match(regExp);
+      ytVideoId = match && match[7].length === 11 && match[7]
     }
-    const videoId = match[7]
+    if (!ytVideoId) {
+      return { valid: false }
+    }
 
-    const { data } = await axios(getYoutubeInfoUrl(videoId, import.meta.env.VITE_YOUTUBE_API_KEY))
+    const { data } = await axios(getYoutubeInfoUrl(ytVideoId, import.meta.env.VITE_YOUTUBE_API_KEY))
     const video = data?.items[0];
     if (!video?.snippet) {
       return { valid: false }
     }
-    const { title, description } = video.snippet;
+    const { title, description, thumbnails } = video.snippet;
     return {
       valid: true,
       data: {
-        videoId,
+        ytVideoId,
         title,
         description,
+        thumbnailUrl: thumbnails?.standard?.url || ''
       }
     }
   }
@@ -57,28 +65,30 @@ const ShareVideo = () => {
     setIsSubmitted(true)
     try {
       const { valid, data } = await getYoutubeData(youtubeUrl)
-      if (!valid || !data) {
-        alert('Link video not valid.')
-        return
-      }
-      if (currentUser) {
+      if (valid && data && currentUser) {
         const newVideoId = await VideoServices.createVideo({
           ...data,
           authorId: currentUser.uid,
           authorEmail: currentUser.email,
           likedBy: [],
-          dislikedBy: []
+          dislikedBy: [],
+          id: ''
         })
+        const allUsers = await UserServices.getAllUsers({ excludeUid: currentUser.uid })
         await NotificationServices.createNotification({
           videoId: newVideoId || '',
-          ytVideoId: data.videoId,
+          ytVideoId: data.ytVideoId,
+          videoThumbnailUrl: data.thumbnailUrl,
           videoTitle: data.title,
           authorId: currentUser.uid,
           authorEmail: currentUser.email,
-          seenBy: [currentUser.uid]
+          notSeenUsers: allUsers.map(({ uid }) => String(uid || '')),
+          seenBy: []
         })
         alert('Success!')
         navigate("/user-shared-video");
+      } else {
+        alert('Link video not valid.')
       }
     } catch (error) {
       console.log(error)

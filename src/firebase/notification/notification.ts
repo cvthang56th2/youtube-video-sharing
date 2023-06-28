@@ -67,8 +67,8 @@ class NotificationServices {
     });
   }
 
-  getNotificationsSnapshot(userId: string, callback: (notifications: NotificationType[]) => void) {
-    const q = query(collection(db, NOTIFICATION));
+  getUserNotificationsSnapshot(userId: string, callback: (notifications: NotificationType[]) => void) {
+    const q = query(collection(db, NOTIFICATION), where('authorId', '!=', userId), where('notSeenUsers', 'array-contains', userId));
     if (typeof this.unsubscribeNotifications === 'function') {
       this.unsubscribeNotifications();
     }

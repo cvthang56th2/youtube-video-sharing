@@ -7,6 +7,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+[class*="fill"] svg * {
+  fill: inherit;
+}
 .btn {
   transition: all 0.25s ease-in-out;
   @apply px-3 py-1 text-sm font-semibold;

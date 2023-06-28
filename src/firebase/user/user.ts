@@ -1,6 +1,7 @@
 import {
   setDoc,
   doc,
+  where,
   Timestamp,
   onSnapshot,
   getDoc,
@@ -51,14 +52,18 @@ class UserServices {
     });
   }
 
-  async getAllUsers() {
+  async getAllUsers(queryOptions?: { excludeUid: string }) {
     try {
-      const loadConfig = query(collection(db, 'users'));
+      let loadConfig = query(collection(db, 'users'));
+      if (queryOptions?.excludeUid) {
+        loadConfig = query(loadConfig, where('uid', '!=', queryOptions.excludeUid))
+      }
       const querySnapshot = await getDocs(loadConfig);
       return snapshotToArray(querySnapshot);
     } catch (error) {
       console.log('getAllUsers ==> error: ', error);
     }
+    return []
   }
 
   async getUserById(id: string) {
