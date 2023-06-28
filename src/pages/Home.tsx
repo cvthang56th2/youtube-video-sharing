@@ -11,9 +11,12 @@ const Home = () => {
       setListVideos(videos)
     })
   }
-  useEffect(() => (() => {
+  useEffect(() => {
     snapshotVideos()
-  }), [])
+    return () => {
+      VideoServices.unsubscribeVideosSnapshot();
+    }
+  }, [])
   return (
     <>
       <h1 className='text-center'>List Video</h1>

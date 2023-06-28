@@ -1,6 +1,7 @@
 import {
   setDoc,
   getDocs,
+  getDoc,
   doc,
   query,
   orderBy,
@@ -69,6 +70,20 @@ class VideoServices {
     });
   }
 
+  async getVideoById(id: string) {
+    try {
+      const videoRef = doc(db, VIDEO, id);
+      const docSnap = await getDoc(videoRef);
+      if (docSnap.exists()) {
+        return docSnap.data() as VideoType;
+      }
+      return null;
+    } catch (error) {
+      console.log('error', error);
+    }
+    return null
+  }
+
   async getAllVideos(queryOptions?: { authorId?: string }): Promise<VideoType[]> {
     try {
       let q = query(collection(db, VIDEO), orderBy("createdAt", 'desc'))
@@ -85,14 +100,18 @@ class VideoServices {
 
   getVideosSnapshot(callback: (videos: VideoType[]) => void) {
     const q = query(collection(db, VIDEO), orderBy("createdAt", 'desc'));
-    if (typeof this.unsubscribeVideos === 'function') {
-      this.unsubscribeVideos();
-    }
+    this.unsubscribeVideosSnapshot()
     this.unsubscribeVideos = onSnapshot(q, (querySnapshot) => {
       if (typeof callback === 'function') {
         callback(snapshotToArray(querySnapshot) as VideoType[]);
       }
     });
+  }
+
+  unsubscribeVideosSnapshot () {
+    if (typeof this.unsubscribeVideos === 'function') {
+      this.unsubscribeVideos();
+    }
   }
 }
 

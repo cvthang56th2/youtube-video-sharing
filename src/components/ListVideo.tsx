@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ReactSVG } from 'react-svg'
 
@@ -7,6 +7,7 @@ import VideoServices from '@/firebase/video/video'
 import { VideoType } from "@/types/Video"
 import { selectCurrentUser } from '@/store/authSlice'
 import PlayBtnIcon from '@/icons/play-btn.svg'
+import PopupVideo from '@/components/PopupVideo'
 
 type PropsType = {
   videos: VideoType[],
@@ -15,7 +16,8 @@ type PropsType = {
 
 const ListVideo = ({ videos, isShowReaction }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
-  const [loadedIframe, setLoadedIframe] = useState<{[key: string]: boolean}>({})
+  const [isShowPopupVideo, setIsShowPopupVideo] = useState(false)
+  const [watchingVideoId, setWatchingVideoId] = useState('')
 
   const checkIsLiked = (video: VideoType): boolean => video.likedBy.includes(currentUser?.uid || '')
   const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
@@ -38,37 +40,31 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
       [oppositeField]: video[oppositeField]
     })
   }
-
-  const loadIframe = (videoId: string) => {
-    setLoadedIframe({
-      ...loadedIframe,
-      [videoId]: true
-    })
+  const watchVideo = (videoId: string) => {
+    setWatchingVideoId(videoId)
+    setIsShowPopupVideo(true)
   }
+
+  useEffect(() => {
+    if (!isShowPopupVideo) {
+      setWatchingVideoId('')
+    }
+    return
+  }, [isShowPopupVideo])
 
   return (
     <>
       {videos.map((videoObj, vIndex) => (
         <div className='flex flex-wrap -mx-4 mb-7 last:mb-0 py-2' key={`video-${vIndex}`}>
           <div className='w-full lg:w-5/12 px-4'>
-            <div className="w-full h-[200px] md:h-[400px] lg:h-[350px] bg-gray-200 relative group cursor-pointer" onClick={() => loadIframe(videoObj.id)}>
+            <div className="w-full h-[200px] md:h-[400px] lg:h-[350px] bg-gray-200 relative group cursor-pointer" onClick={() => watchVideo(videoObj.id)}>
               <img src={videoObj.thumbnailUrl} alt={videoObj.title} className="absolute inset-0 w-full h-full object-cover !m-0 pointer-events-none" />
-              <div className="absolute inset-0 bg-gray-800 opacity-60 group-hover:opacity-0 transition-all duration-200 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gray-800 opacity-60 group-hover:opacity-20 transition-all duration-200 pointer-events-none"></div>
               <ReactSVG src={PlayBtnIcon} className="center-middle !m-0 fill-white pointer-events-none" />
-              {loadedIframe[videoObj.id] && (
-                <iframe
-                  src={`https://www.youtube.com/embed/${videoObj.ytVideoId}?autoplay=1`}
-                  className="w-full h-full absolute inset-0 video-iframe"
-                  title={videoObj.title}
-                  allowFullScreen
-                  allow="autoplay"
-                >
-                </iframe>
-              )}
             </div>
           </div>
           <div className='w-full pt-2 lg:pt-0 lg:w-7/12 px-4'>
-            <h5 className="font-bold">{ videoObj.title }</h5>
+            <h5 className="font-bold cursor-pointer underline" onClick={() => watchVideo(videoObj.id)}>{ videoObj.title }</h5>
             <div><span className="font-semibold">Shared by:</span> { videoObj.authorEmail }</div>
             {isShowReaction && (
               <div className="flex items-center">
@@ -86,6 +82,7 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
           </div>
         </div>
       ))}
+      <PopupVideo isShow={isShowPopupVideo} videoId={watchingVideoId} close={() => setIsShowPopupVideo(false)} />
     </>
   )
 }

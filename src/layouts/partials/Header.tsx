@@ -25,13 +25,16 @@ const Header = () => {
     dispatch(setCurrentUser(null))
   }
   
-  useEffect(() => (() => {
+  useEffect(() => {
     if (currentUser) {
       NotificationServices.getUserNotificationsSnapshot(currentUser.uid, data => {
         setNotifications(data)
       })
+    } else {
+      NotificationServices.unsubscribeUserNotificationSnapshot()
     }
-  }), [currentUser])
+    return
+  }, [currentUser])
 
   return (
     <header className="flex-0 p-4 border-b-2 flex flex-wrap justify-between items-center">
