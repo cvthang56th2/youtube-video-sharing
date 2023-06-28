@@ -11,8 +11,10 @@ import RecommendLogin from '@/components/RecommendLogin'
 const UserSharedVideo = () => {
   const currentUser = useSelector(selectCurrentUser)
   const [videos, setVideos] = useState<VideoType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const getListVideo = async () => {
+    setIsLoading(true)
     try {
       if (currentUser) {
         const data = await VideoServices.getAllVideos({ authorId: currentUser.uid })
@@ -21,6 +23,7 @@ const UserSharedVideo = () => {
     } catch (error) {
       console.log(error)
     }
+    setIsLoading(false)
   }
 
   useEffect(() => (() => {
@@ -29,13 +32,20 @@ const UserSharedVideo = () => {
 
   return (
     <div>
-      <h2 className='text-center !mt-0'>User Shared Video</h2>
-      {currentUser && (
-        <ListVideo videos={videos} isShowReaction={false}></ListVideo>
-      )}
-      {!currentUser && (
-        <RecommendLogin />
-      )}
+      <div className='text-center'>
+        <h2 className='!mt-0'>User Shared Video</h2>
+        <button className='btn btn-blue' onClick={() => getListVideo()}>Refresh</button>
+        {isLoading && (
+          <div className="text-center text-base font-semibold mt-4 animate-bounce">Fetching user shared video ...</div>
+        )}
+      </div>
+      <div className='relative'>
+        {currentUser ? (
+          <ListVideo videos={videos} isShowReaction={false}></ListVideo>
+        ) :  (
+          <RecommendLogin />
+        )}
+      </div>
     </div>
   )
 }

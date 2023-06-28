@@ -31,3 +31,8 @@ export const formatDate = (date: Date | Timestamp | number | string | undefined,
 
   return String(date);
 };
+
+export const preventEvents = (event: { preventDefault: () => void; stopPropagation: () => void }) => {
+  event.preventDefault()
+  event.stopPropagation()
+}

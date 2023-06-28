@@ -11,6 +11,7 @@ import DialogNotifications from "@/components/DialogNotifications"
 
 import AuthServices from '@/firebase/auth/auth'
 import { selectNotifications, setNotifications } from "@/store/notificationSlice";
+import { preventEvents } from "@/utils/utils";
 
 const Header = () => {
   const currentUser = useSelector(selectCurrentUser)
@@ -22,19 +23,22 @@ const Header = () => {
 
   const logout = () => {
     AuthServices.logout()
+    NotificationServices.unsubscribeUserNotificationSnapshot()
     dispatch(setCurrentUser(null))
   }
   
-  useEffect(() => {
+  useEffect(() => (() => {
     if (currentUser) {
       NotificationServices.getUserNotificationsSnapshot(currentUser.uid, data => {
-        setNotifications(data)
+        dispatch(setNotifications(data))
       })
-    } else {
-      NotificationServices.unsubscribeUserNotificationSnapshot()
     }
-    return
-  }, [currentUser])
+  }), [currentUser])
+
+  const openDialogNotification = (event: { preventDefault: () => void; stopPropagation: () => void; }) => {
+    preventEvents(event)
+    setIsShowDialogNotification(true)
+  }
 
   return (
     <header className="flex-0 p-4 border-b-2 flex flex-wrap justify-between items-center">
@@ -48,11 +52,11 @@ const Header = () => {
             <div className="flex items-center">
               
               <div className="ml-2 relative">
-                <button className="btn btn-purple" onClick={() => setIsShowDialogNotification(!isShowDialogNotification)}>
+                <button className="btn btn-purple" onClick={openDialogNotification}>
                   Notification <span className={["ml-2 bg-white w-6 h-6 rounded-full text-purple-500 font-semibold inline-flex items-center justify-center", notifications.length ? 'animate-bounce' : ''].join(' ')}>{notifications.length}</span>
                 </button>
                 {isShowDialogNotification && (
-                  <DialogNotifications />
+                  <DialogNotifications close={() => setIsShowDialogNotification(false)} />
                 )}
               </div>
               <Link to="/share-video" className="btn btn-blue ml-2">
