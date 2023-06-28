@@ -19,7 +19,15 @@ const VideoInfo = ({ isShowReaction, video, currentUser, showWatchVideo = true, 
   const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
 
   const reaction = (video: VideoType, type: 'like' | 'dislike') => {
-    if (!currentUser || !video.id) {
+    if (!currentUser) {
+      alert('You are not currently logged in. Please log in to perform this action.')
+      const loginBtn = document.querySelector('#login-btn') as HTMLElement
+      if (loginBtn) {
+        loginBtn.click()
+      }
+      return
+    }
+    if (!video.id) {
       return
     }
     const field = type === 'like' ? 'likedBy' : 'dislikedBy'

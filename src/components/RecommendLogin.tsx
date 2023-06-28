@@ -8,7 +8,7 @@ const RecommendLogin = () => {
 
   return (
     <div className='text-center'>
-      <p>You are not logged in.</p>
+      <p>You are not currently logged in. Please log in to perform this action.</p>
       <button className='btn btn-green text-base px-5 py-2' onClick={() => openLogin()}>Login / Register</button>
     </div>
   )
