@@ -1,9 +1,12 @@
-import { VideoType } from "@/types/Video"
-import { isElementScrolledIntoView } from "@/utils/utils"
-import { useEffect } from "react"
-import { selectCurrentUser } from '@/store/authSlice'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { ReactSVG } from 'react-svg'
+
 import VideoServices from '@/firebase/video/video'
+
+import { VideoType } from "@/types/Video"
+import { selectCurrentUser } from '@/store/authSlice'
+import PlayBtnIcon from '@/icons/play-btn.svg'
 
 type PropsType = {
   videos: VideoType[],
@@ -12,6 +15,7 @@ type PropsType = {
 
 const ListVideo = ({ videos, isShowReaction }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
+  const [loadedIframe, setLoadedIframe] = useState<{[key: string]: boolean}>({})
 
   const checkIsLiked = (video: VideoType): boolean => video.likedBy.includes(currentUser?.uid || '')
   const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
@@ -35,42 +39,37 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
     })
   }
 
-  const lazyLoadIframe = () => {
-    const mainEl = document.querySelector('main') as HTMLElement
-    for (const iframe of document.querySelectorAll('iframe.video-iframe')) {
-      const dataSrc = iframe.getAttribute('data-src')
-      if (dataSrc && !iframe.getAttribute('src') && isElementScrolledIntoView(mainEl, iframe as HTMLElement)) {
-        iframe.setAttribute('src', dataSrc)
-      }
-    }
+  const loadIframe = (videoId: string) => {
+    setLoadedIframe({
+      ...loadedIframe,
+      [videoId]: true
+    })
   }
-
-  useEffect(() => {
-    lazyLoadIframe()
-    const mainEl = document.querySelector('main') as HTMLElement
-    mainEl.addEventListener('scroll', lazyLoadIframe)
-    return () => {
-      mainEl.removeEventListener('scroll', lazyLoadIframe)
-    }
-  }, [videos])
 
   return (
     <>
       {videos.map((videoObj, vIndex) => (
         <div className='flex flex-wrap -mx-4 mb-7 last:mb-0 py-2' key={`video-${vIndex}`}>
           <div className='w-full lg:w-5/12 px-4'>
-            <div className="w-full h-[200px] md:h-[400px] lg:h-[350px] bg-gray-200 relative group cursor-pointer">
-              <iframe
-                data-src={`https://www.youtube.com/embed/${videoObj.videoId}`}
-                className="w-full h-full absolute inset-0 z-1 video-iframe"
-                allowFullScreen
-              >
-              </iframe>
+            <div className="w-full h-[200px] md:h-[400px] lg:h-[350px] bg-gray-200 relative group cursor-pointer" onClick={() => loadIframe(videoObj.id)}>
+              <img src={videoObj.thumbnailUrl} alt={videoObj.title} className="absolute inset-0 w-full h-full object-cover !m-0 pointer-events-none" />
+              <div className="absolute inset-0 bg-gray-800 opacity-60 group-hover:opacity-0 transition-all duration-200 pointer-events-none"></div>
+              <ReactSVG src={PlayBtnIcon} className="center-middle !m-0 fill-white pointer-events-none" />
+              {loadedIframe[videoObj.id] && (
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoObj.ytVideoId}?autoplay=1`}
+                  className="w-full h-full absolute inset-0 video-iframe"
+                  title={videoObj.title}
+                  allowFullScreen
+                  allow="autoplay"
+                >
+                </iframe>
+              )}
             </div>
           </div>
           <div className='w-full pt-2 lg:pt-0 lg:w-7/12 px-4'>
             <h5 className="font-bold">{ videoObj.title }</h5>
-            <div>Shared by: { videoObj.authorEmail }</div>
+            <div><span className="font-semibold">Shared by:</span> { videoObj.authorEmail }</div>
             {isShowReaction && (
               <div className="flex items-center">
                 <button onClick={() => reaction(videoObj, 'like')} className={["btn font-bold border-2 rounded-sm hover:scale-125", checkIsLiked(videoObj) ? 'text-white bg-blue-600 scale-125' : 'text-blue-600 hover:text-white hover:bg-blue-600'].join(' ')}>Like</button>
@@ -78,11 +77,11 @@ const ListVideo = ({ videos, isShowReaction }: PropsType) => {
               </div>
             )}
             <div className="flex">
-              <span>Like: { videoObj.likedBy?.length || 0 }</span>
+              <span><span className="font-semibold">Like:</span> { videoObj.likedBy?.length || 0 }</span>
               <span className="mx-4">-</span>
-              <span>Dislike: { videoObj.dislikedBy?.length || 0 }</span>
+              <span><span className="font-semibold">Dislike:</span> { videoObj.dislikedBy?.length || 0 }</span>
             </div>
-            <div>Description:</div>
+            <div className="font-semibold">Description:</div>
             <div>{ videoObj.description }</div>
           </div>
         </div>
