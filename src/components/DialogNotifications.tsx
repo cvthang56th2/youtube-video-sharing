@@ -74,7 +74,7 @@ const DialogNotifications = (props: { close: () => void }) => {
                 </div>
               </div>
             </div>
-            <div className='text-right mt-2 mb-1'>
+            <div className='text-right mb-1'>
               <button onClick={() => watchVideo(notify.videoId)} className='btn btn-blue'>Watch Now</button>
               <button onClick={() => seenNotification(notify)} className='btn btn-green ml-4'>Checked</button>
             </div>
