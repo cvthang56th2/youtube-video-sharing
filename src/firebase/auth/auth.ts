@@ -12,7 +12,7 @@ import {
 import UserServices from '../user/user';
 
 class AuthServices {
-  onAuthStateChanged(cb: (user: unknown) => void) {
+  onAuthStateChanged(cb: any) {
     return onAuthStateChanged(auth, cb);
   }
 

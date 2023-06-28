@@ -66,17 +66,18 @@ class UserServices {
     return []
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string) : Promise<UserType | null> {
     try {
       const userRef = doc(db, USERS, id);
       const docSnap = await getDoc(userRef);
       if (docSnap.exists()) {
-        return docSnap.data();
+        return docSnap.data() as UserType;
       }
       return null;
     } catch (error) {
       console.log('error', error);
     }
+    return null
   }
 
   async getUsersInfo(datas: string[]) {

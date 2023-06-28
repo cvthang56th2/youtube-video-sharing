@@ -2,7 +2,6 @@ import {
   setDoc,
   doc,
   query,
-  orderBy,
   where,
   collection,
   onSnapshot,
