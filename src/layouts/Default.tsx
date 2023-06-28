@@ -19,7 +19,7 @@ const LayoutDefault = (props: PropsType) => {
 
   useEffect(() => {
     AuthServices.onAuthStateChanged(async (res: { uid: string }) => {
-      const { uid } = res
+      const { uid } = res || {}
       if (uid) {
         const userInfo = await UserServices.getUserById(uid)
         if (userInfo) {
