@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux'
 
 import { VideoType } from "@/types/Video";
-import { selectCurrentUser } from '@/store/authSlice'
 import VideoServices from '@/firebase/video/video'
 import { preventEvents } from "@/utils/utils";
 import VideoInfo from "@/components/VideoInfo";
@@ -15,7 +13,6 @@ interface PropsType {
 }
 
 const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType) => {
-  const currentUser = useSelector(selectCurrentUser)
   const [videoData, setVideoData] = useState<VideoType | null>(null)
   const getVideoData = async () => {
     try {
@@ -63,7 +60,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
                     </div>
                   </div>
                   <div className="flex-1 overflow-y-auto mt-4">
-                    <VideoInfo isShowReaction={isShowReaction} video={videoData} currentUser={currentUser} showWatchVideo={false} />
+                    <VideoInfo isShowReaction={isShowReaction} video={videoData} />
                   </div>
                 </>
               ) : (
