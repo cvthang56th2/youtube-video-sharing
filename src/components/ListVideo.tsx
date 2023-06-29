@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ReactSVG } from 'react-svg'
 
@@ -7,6 +7,7 @@ import { selectCurrentUser } from '@/store/authSlice'
 import PlayBtnIcon from '@/icons/play-btn.svg'
 import PopupVideo from '@/components/PopupVideo'
 import VideoInfo from '@/components/VideoInfo'
+import { toLowerCaseNonAccentVietnamese } from '@/utils/utils'
 
 type PropsType = {
   videos: VideoType[],
@@ -15,12 +16,17 @@ type PropsType = {
 
 const ListVideo = ({ videos, isShowReaction = true }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
+  const [keyword, setKeyword] = useState('')
   const [isShowPopupVideo, setIsShowPopupVideo] = useState(false)
   const [watchingVideoId, setWatchingVideoId] = useState('')
 
   const watchVideo = (videoId: string) => {
     setWatchingVideoId(videoId)
     setIsShowPopupVideo(true)
+  }
+  
+  const handleChangeKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(event.currentTarget.value)
   }
 
   useEffect(() => {
@@ -30,11 +36,28 @@ const ListVideo = ({ videos, isShowReaction = true }: PropsType) => {
     return
   }, [isShowPopupVideo])
 
+  const videosMemo = useMemo(() => {
+    let result = JSON.parse(JSON.stringify(videos))
+    if (keyword) {
+      const regex = new RegExp(keyword, 'gi')
+      result = result.filter((video: VideoType) => (
+        (video.title && toLowerCaseNonAccentVietnamese(video.title).match(regex)) ||
+        (video.authorEmail && video.authorEmail.match(regex))
+      ))
+    }
+    return result
+  }, [videos, keyword]);
+
   return (
     <>
-      <div className='flex flex-wrap -mx-3 items-stretch'>
-        {videos.map((video, vIndex) => (
-          <div className='w-full md:w-1/2 xl:w-1/3 px-3 mb-8'>
+      <div className='flex flex-wrap'>
+        <div className='w-full xl:w-1/2'>
+          <input value={keyword} onChange={handleChangeKeyword} type="text" placeholder='Search by video name, author name,...' />
+        </div>
+      </div>
+      <div className='flex flex-wrap -mx-3 mt-4'>
+        {videosMemo.map((video: VideoType, vIndex: number) => (
+          <div className='w-full md:w-1/2 xl:w-1/3 px-3 mb-8' key={`video-${vIndex}`}>
             <div className='last:mb-0 border-2 rounded-xl h-full flex flex-col' key={`video-${vIndex}`}>
               <div className="flex-0 w-full h-[200px] md:h-[400px] lg:h-[250px] relative group cursor-pointer" onClick={() => watchVideo(video.id)}>
                 <img src={video.thumbnailUrl} alt={video.title} className="absolute inset-0 w-full h-full object-cover !m-0 pointer-events-none rounded-tr-xl rounded-tl-xl" />
