@@ -45,7 +45,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
         {isShow && (
           <button className="absolute top-2 right-2 z-10 border-2 border-black bg-white rounded-full text-3xl px-[6px] hover:text-red-500" onClick={() => close()}>&#10005;</button>
         )}
-        <div className={["bg-white w-[800px] max-w-[95%] max-h-[95%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out relative", isShow ? 'transform-none' : 'scale-0'].join(' ')} onClick={preventEvents}>
+        <div className={["bg-white w-[1024px] max-w-[90%] max-h-[90%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out relative", isShow ? 'transform-none' : 'scale-0'].join(' ')} onClick={preventEvents}>
           {isShow && (
             <>
               {videoData ? (
