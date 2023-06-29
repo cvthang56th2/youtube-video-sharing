@@ -54,3 +54,18 @@ body {
     background-color: #ffffff;
   }
 }
+@media (prefers-color-scheme: dark) {
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6,
+  .prose {
+    color: #fff;
+  }
+  .bg-white,
+  .bg-white * {
+    color: #213547;
+  }
+}
