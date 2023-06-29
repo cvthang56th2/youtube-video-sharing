@@ -108,8 +108,12 @@ class VideoServices {
     });
   }
 
+  isWatchingChanges () {
+    return !!(this.unsubscribeVideos)
+  }
+
   unsubscribeVideosSnapshot () {
-    if (typeof this.unsubscribeVideos === 'function') {
+    if (this.isWatchingChanges() && this.unsubscribeVideos) {
       this.unsubscribeVideos();
     }
   }

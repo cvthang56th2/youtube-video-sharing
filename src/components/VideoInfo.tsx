@@ -5,7 +5,7 @@ import { VideoType } from "@/types/Video"
 import { selectCurrentUser } from '@/store/authSlice'
 
 import VideoServices from '@/firebase/video/video'
-import { preventEvents } from '@/utils/utils'
+import { formatDate, preventEvents } from '@/utils/utils'
 
 type PropsType = {
   isShowReaction: boolean,
@@ -60,10 +60,15 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
             <button onClick={(event) => reaction(event, video, 'dislike')} className={["btn font-bold border-2 rounded-sm hover:scale-125 ml-4", checkIsDisLiked(video) ? 'text-white bg-gray-600 scale-125' : 'text-gray-600 hover:text-white hover:bg-gray-600'].join(' ')}>DisLike</button>
           </div>
         )}
-        <div className="flex">
-          <span><span className="font-semibold">Like:</span> { video.likedBy?.length || 0 }</span>
-          <span className="mx-4">-</span>
-          <span><span className="font-semibold">Dislike:</span> { video.dislikedBy?.length || 0 }</span>
+        <div className="flex justify-between items-center">
+          <div>
+            <span><span className="font-semibold">Like:</span> { video.likedBy?.length || 0 }</span>
+            <span className="mx-4">-</span>
+            <span><span className="font-semibold">Dislike:</span> { video.dislikedBy?.length || 0 }</span>
+          </div>
+          <div className='italic text-base my-0'>
+            { formatDate(video.createdAt, 'fromNow') }
+          </div>
         </div>
         {showDescription && (
           <>

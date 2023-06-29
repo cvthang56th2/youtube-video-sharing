@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import VideoServices from '@/firebase/video/video'
 import ListVideo from '@/components/ListVideo'
 import { VideoType } from '@/types/Video'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectVideos, setVideos } from '@/store/videoSlice'
 
 const Home = () => {
-  const [listVideos, setListVideos] = useState<VideoType[]>([])
+  const listVideos = useSelector(selectVideos)
+  const dispatch = useDispatch()
   const snapshotVideos = () => {
+    if (VideoServices.isWatchingChanges()) return
     VideoServices.getVideosSnapshot((videos: VideoType[]) => {
-      setListVideos(videos)
+      dispatch(setVideos(videos))
     })
   }
   useEffect(() => {
     snapshotVideos()
-    return () => {
-      VideoServices.unsubscribeVideosSnapshot();
-    }
   }, [])
   return (
     <>

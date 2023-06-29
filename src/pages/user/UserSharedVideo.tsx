@@ -1,47 +1,36 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import VideoServices from '@/firebase/video/video'
 
 import ListVideo from "@/components/ListVideo"
 import { VideoType } from '@/types/Video'
 import { selectCurrentUser } from '@/store/authSlice'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import RecommendLogin from '@/components/RecommendLogin'
+import { selectVideos, setVideos } from '@/store/videoSlice'
 
 const UserSharedVideo = () => {
   const currentUser = useSelector(selectCurrentUser)
-  const [videos, setVideos] = useState<VideoType[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  const getListVideo = async () => {
-    setIsLoading(true)
-    try {
-      if (currentUser) {
-        const data = await VideoServices.getAllVideos({ authorId: currentUser.uid })
-        setVideos(data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-    setIsLoading(false)
+  const listVideos = useSelector(selectVideos)
+  const dispatch = useDispatch()
+  const snapshotVideos = () => {
+    if (VideoServices.isWatchingChanges()) return
+    VideoServices.getVideosSnapshot((videos: VideoType[]) => {
+      dispatch(setVideos(videos))
+    })
   }
-
-  useEffect(() => (() => {
-    getListVideo()
-  }), [])
+  useEffect(() => {
+    snapshotVideos()
+  }, [])
 
   return (
     <div>
       <div className='text-center'>
         <h2 className='!mt-0'>User Shared Video</h2>
-        <button className='btn btn-blue' onClick={() => getListVideo()}>Refresh</button>
-        {isLoading && (
-          <div className="text-center text-base font-semibold mt-4 animate-bounce">Fetching user shared video ...</div>
-        )}
       </div>
       <div className='relative'>
         {currentUser ? (
-          <ListVideo videos={videos} isShowReaction={false}></ListVideo>
+          <ListVideo videos={listVideos.filter((video: VideoType) => video.authorId === currentUser.uid)} isShowReaction={false}></ListVideo>
         ) :  (
           <RecommendLogin />
         )}

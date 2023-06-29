@@ -12,13 +12,13 @@ export const snapshotToArray = (snapshot: QuerySnapshot<DocumentData>): Document
 };
 
 
-export const formatDate = (date: Date | Timestamp | number | string | undefined, format = 'DD/MM/YYYY hh:mm'): string => {
+export const formatDate = (date: any, format = 'DD/MM/YYYY hh:mm'): string => {
   if (!date) {
     return '';
   }
 
-  if (date instanceof Timestamp) {
-    date = date.toDate();
+  if (date.seconds && date.nanoseconds) {
+    date = new Timestamp(date.seconds , date.nanoseconds).toDate();
   }
 
   if (typeof date === 'number') {
@@ -26,7 +26,11 @@ export const formatDate = (date: Date | Timestamp | number | string | undefined,
   }
 
   if (date instanceof Date && !isNaN(date.getTime())) {
-    return moment(date).format(format);
+    const momentDate = moment(date)
+    if (format === 'fromNow') {
+      return momentDate.fromNow();
+    }
+    return momentDate.format(format);
   }
 
   return String(date);
