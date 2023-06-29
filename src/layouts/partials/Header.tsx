@@ -37,7 +37,7 @@ const Header = () => {
 
   const openDialogNotification = (event: { preventDefault: () => void; stopPropagation: () => void; }) => {
     preventEvents(event)
-    setIsShowDialogNotification(true)
+    setIsShowDialogNotification(!isShowDialogNotification)
   }
 
   return (
