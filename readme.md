@@ -4,15 +4,16 @@
 
 <!-- A brief overview of the project, its purpose, and key features. -->
 
-Youtube Video Sharing app is a platform help user watch and share funny videos for others.
-Key features:
+Youtube Video Sharing app is a platform to help users watch and share funny videos to others.
 
-- View list/detail video
+### Key features:
+
+- Authentication
+- View list and watch video
 - Reaction video
 - Share video
 - Manage shared video
 - Notification
-- Lazy load Iframe: for better performance.
 
 ## Prerequisites:
 
@@ -37,39 +38,59 @@ Key features:
 - Clone source
 - Config environment:
   - clone a .env.sample and rename to .env.local
-  - API, IDS...
+  - Youtube API, Firebase configs...
 
 ## Database Setup:
 
 <!-- Instructions for setting up the database, running migrations, and seeding data if necessary. -->
 
 - Collections: users, videos, notifications.
-- Seeding: /seeding?KEY=abcd
-- Indexing
+
+## Seeding: /seeding?KEY=abcd
+
+## Indexing
+
+**Notification**
+
+| fields       | order     |
+| ------------ | --------- |
+| notSeenUsers | Arrays    |
+| authorId     | Ascending |
+| **name**     | Ascending |
 
 ## Running the Application:
 
 <!-- How to start the development server, access the application in a web browser, and run the test suite. -->
 
 - Start dev: After step Install and config: to start development: npm run dev
-- Run test: ...
+- Testing:
+  - Unit test functions
+  - Unit test React Components
+  - Coverage
 
-## Docker Deployment:
+## Deployment:
 
-<!-- Instructions for deploying the application using Docker, including building the Docker image and running containers  -->
+This app is being deployed on firebase hosting using firebase cli.
 
+To deploy to firebase run these steps:
+
+- Setup according to firebase instructions
+- Build project
+- Deploy to firebase hosting
 
 ## Usage:
-
-<!-- A brief guide outlining how to use the application, including any specific features or functionality the reviewer should be aware of. -->
 
 - How to view list video?
 - Reaction video
 - Share video
 - Manage shared video
+  - How to set private/public
+- Check notification
 
 ## Troubleshooting:
 
 <!-- Common issues that may arise during setup and their potential solutions. -->
 
 Make sure your Node.js version must 14.18+
+Firebase configs
+Youtube API
