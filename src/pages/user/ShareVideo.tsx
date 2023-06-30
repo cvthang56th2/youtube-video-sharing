@@ -72,6 +72,7 @@ const ShareVideo = () => {
           authorEmail: currentUser.email,
           likedBy: [],
           dislikedBy: [],
+          isPrivate: false,
           id: ''
         })
         const allUsers = await UserServices.getAllUsers({ excludeUid: currentUser.uid })
@@ -82,6 +83,7 @@ const ShareVideo = () => {
           videoTitle: data.title,
           authorId: currentUser.uid,
           authorEmail: currentUser.email,
+          isArchived: false,
           notSeenUsers: allUsers.map(({ uid }) => String(uid || '')),
           seenBy: []
         })

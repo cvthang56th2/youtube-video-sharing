@@ -8,5 +8,6 @@ export type NotificationType = {
   authorEmail: string,
   createdAt?: Date,
   notSeenUsers: string[],
-  seenBy: string[]
+  seenBy: string[],
+  isArchived?: boolean
 }

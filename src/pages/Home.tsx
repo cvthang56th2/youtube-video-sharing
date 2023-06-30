@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import VideoServices from '@/firebase/video/video'
 import ListVideo from '@/components/ListVideo'
@@ -18,10 +18,13 @@ const Home = () => {
   useEffect(() => {
     snapshotVideos()
   }, [])
+
+  const publicVideos = useMemo(() => listVideos.filter((video: VideoType) => !video.isPrivate), [listVideos])
+
   return (
     <>
       <h1 className='text-center'>List Video</h1>
-      <ListVideo videos={listVideos} isShowReaction />
+      <ListVideo videos={publicVideos} isShowReaction />
     </>
   )
 }

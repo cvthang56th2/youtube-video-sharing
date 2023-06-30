@@ -1,5 +1,6 @@
 import {
   setDoc,
+  getDocs,
   doc,
   query,
   where,
@@ -54,6 +55,28 @@ class NotificationServices {
     });
   }
 
+  async updateVideoNotification(videoId: string, data: {[key: string]: unknown}) {
+    const q = query(collection(db, NOTIFICATION),where('videoId', '==', videoId))
+    const querySnapshot = await getDocs(q);
+    const notification = snapshotToArray(querySnapshot)[0];
+    if (!notification) {
+      return
+    }
+    return new Promise<void>((resolve, reject) => {
+      try {
+        const today = new Date();
+        const ref = doc(db, NOTIFICATION, notification.id);
+        resolve(updateDoc(ref, {
+          updatedAt: Timestamp.fromDate(today),
+          ...data
+        }));
+      } catch (err) {
+        console.error('error update notification', err);
+        reject(err);
+      }
+    });
+  }
+
   deleteNotification(notificationId: string) {
     return new Promise<void>((resolve, reject) => {
       try {
@@ -71,7 +94,8 @@ class NotificationServices {
     this.unsubscribeUserNotificationSnapshot()
     this.unsubscribeNotifications = onSnapshot(q, (querySnapshot) => {
       if (typeof callback === 'function') {
-        callback(snapshotToArray(querySnapshot) as NotificationType[]);
+        const notifications = (snapshotToArray(querySnapshot) as NotificationType[]).filter((notification: NotificationType) => !notification.isArchived)
+        callback(notifications);
       }
     });
   }

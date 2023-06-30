@@ -41,7 +41,12 @@ const UserSharedVideo = () => {
   useEffect(() => {
     snapshotVideos()
   }, [])
-  const userVideos = useMemo(() => listVideos.filter((video: VideoType) => video.authorId === userId), [userId, listVideos])
+  const userVideos = useMemo(() => listVideos.filter((video: VideoType) => {
+    if (video.isPrivate && currentUser?.uid !== video.authorId) {
+      return false
+    }
+    return video.authorId === userId
+  }), [userId, listVideos, currentUser])
 
   return (
     <div>
@@ -50,7 +55,7 @@ const UserSharedVideo = () => {
       </div>
       <div className='relative'>
         {userData ? (
-          <ListVideo videos={userVideos} isShowReaction={currentUser?.uid !== userId}></ListVideo>
+          <ListVideo videos={userVideos} isShowReaction={currentUser?.uid !== userId} showActions={currentUser?.uid === userId}></ListVideo>
         ) : (
           <div className='text-center'>User not found.</div>
         )}

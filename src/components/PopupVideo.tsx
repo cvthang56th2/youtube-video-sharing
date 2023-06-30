@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux'
+
+import VideoServices from '@/firebase/video/video'
 
 import { VideoType } from "@/types/Video";
-import VideoServices from '@/firebase/video/video'
 import { preventEvents } from "@/utils/utils";
+import { selectCurrentUser } from '@/store/authSlice'
+
 import VideoInfo from "@/components/VideoInfo";
 
 interface PropsType {
@@ -13,13 +17,14 @@ interface PropsType {
 }
 
 const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType) => {
+  const currentUser = useSelector(selectCurrentUser)
   const [videoData, setVideoData] = useState<VideoType | null>(null)
   const getVideoData = async () => {
     try {
       const data = await VideoServices.getVideoById(videoId)
       setVideoData(data)
     } catch (error) {
-      console.log(error)      
+      console.log(error)
     }
   }
   const closeOnEsc = (event: KeyboardEvent) => {
@@ -45,23 +50,30 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
         <div className={["bg-white w-[1024px] max-w-[90%] max-h-[90%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out relative", isShow ? 'transform-none' : 'scale-0'].join(' ')} onClick={preventEvents}>
           {isShow && (
             <>
-              {videoData ? (
+              {videoData ? 
+              (
                 <>
-                  <div className="flex-0">
-                    <div className="w-full h-[300px] xl:h-[400px] relative">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${videoData.ytVideoId}?autoplay=1`}
-                        className="w-full h-full absolute inset-0 video-iframe"
-                        title={videoData.title}
-                        allowFullScreen
-                        allow="autoplay"
-                      >
-                      </iframe>
-                    </div>
-                  </div>
-                  <div className="flex-1 overflow-y-auto mt-4">
-                    <VideoInfo isShowReaction={isShowReaction} video={videoData} />
-                  </div>
+                  {videoData.isPrivate && videoData.authorId !== currentUser?.uid ? (
+                    <div className="text-center">Can't watch this video. This video is Private.</div>
+                  ) : (
+                    <>
+                      <div className="flex-0">
+                        <div className="w-full h-[300px] xl:h-[400px] relative">
+                          <iframe
+                            src={`https://www.youtube.com/embed/${videoData.ytVideoId}?autoplay=1`}
+                            className="w-full h-full absolute inset-0 video-iframe"
+                            title={videoData.title}
+                            allowFullScreen
+                            allow="autoplay"
+                          >
+                          </iframe>
+                        </div>
+                      </div>
+                      <div className="flex-1 overflow-y-auto mt-4">
+                        <VideoInfo isShowReaction={isShowReaction} video={videoData} />
+                      </div>
+                    </>
+                  )}
                 </>
               ) : (
                 <div className="animate-bounce m-auto text-xl font-semibold">Fetching video data...</div>
