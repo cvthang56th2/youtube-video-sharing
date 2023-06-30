@@ -10,5 +10,6 @@ export type VideoType = YoutubeVideo & {
   authorEmail: string,
   likedBy: string[],
   createdAt?: Date,
-  dislikedBy: string[]
+  dislikedBy: string[],
+  isPrivate: boolean
 }

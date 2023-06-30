@@ -62,7 +62,7 @@ const Header = () => {
               <Link to="/share-video" className="btn btn-blue ml-2">
                 Share a movie
               </Link>
-              <Link to="/user-shared-video" className="btn btn-pink ml-2">
+              <Link to={`/user-shared-video/${currentUser.uid}`} className="btn btn-pink ml-2">
                 My Video
               </Link>
               <Confirm onYes={() => logout()}>

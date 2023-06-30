@@ -18,7 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/share-video" element={<ShareVideo />} />
-            <Route path="/user-shared-video" element={<UserSharedVideo />} />
+            <Route path="/user-shared-video/:userId" element={<UserSharedVideo />} />
           </Routes>
         </LayoutDefault>
       </BrowserRouter>

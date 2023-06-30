@@ -6,6 +6,7 @@ import { selectCurrentUser } from '@/store/authSlice'
 
 import VideoServices from '@/firebase/video/video'
 import { formatDate, preventEvents } from '@/utils/utils'
+import { Link } from 'react-router-dom'
 
 type PropsType = {
   isShowReaction: boolean,
@@ -53,7 +54,7 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
     <div className='h-full flex flex-col'>
       <div className='flex-1'>
         <h5 className="font-bold underline">{ video.title }</h5>
-        <div><span className="font-semibold">Shared by:</span> { video.authorEmail }</div>
+        <div><span className="font-semibold">Shared by:</span> <Link to={`/user-shared-video/${video.authorId}`}>{ video.authorEmail }</Link></div>
         {isShowReaction && (
           <div className="flex items-center">
             <button onClick={(event) => reaction(event, video, 'like')} className={["btn font-bold border-2 rounded-sm hover:scale-125", checkIsLiked(video) ? 'text-white bg-blue-600 scale-125' : 'text-blue-600 hover:text-white hover:bg-blue-600'].join(' ')}>Like</button>
