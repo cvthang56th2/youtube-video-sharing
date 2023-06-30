@@ -81,11 +81,11 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
         {showDescription && (
           <>
             <div className="font-semibold">Description:</div>
-            <div>
+            <div onClick={() => setShownMore(!shownMore)}>
               {video.description.length <= 200 ? video.description : (
                 <div>
                   { shownMore ? video.description : video.description.substring(0, 200) + '...' }
-                  <span className='underline text-blue-500 hover:text-blue-500 ml-2 cursor-pointer' onClick={() => setShownMore(!shownMore)}>{shownMore ? 'Close' : 'View All'}</span>
+                  <span className='underline text-blue-500 hover:text-blue-500 ml-2 cursor-pointer'>{shownMore ? 'Close' : 'View All'}</span>
                 </div>
               )}
             </div>
