@@ -33,7 +33,7 @@ const LayoutDefault = (props: PropsType) => {
 
   return (
     <div className="prose prose-sm lg:prose-lg xl:prose-xl">
-      <div className="h-screen w-screen flex justify-center items-center">
+      <div className="h-[100svw] w-[100svw] flex justify-center items-center">
         {isLoaded ? (
           <div className="container mx-auto h-full overflow-y-auto flex flex-col">
             <Header />
