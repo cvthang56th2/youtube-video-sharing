@@ -27,13 +27,13 @@ const Header = () => {
     dispatch(setCurrentUser(null))
   }
   
-  useEffect(() => (() => {
+  useEffect(() => {
     if (currentUser) {
       NotificationServices.getUserNotificationsSnapshot(currentUser.uid, data => {
         dispatch(setNotifications(data))
       })
     }
-  }), [currentUser])
+  }, [currentUser])
 
   const openDialogNotification = (event: { preventDefault: () => void; stopPropagation: () => void; }) => {
     preventEvents(event)

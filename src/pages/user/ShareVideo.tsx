@@ -86,7 +86,7 @@ const ShareVideo = () => {
           seenBy: []
         })
         alert('Success!')
-        navigate("/user-shared-video");
+        navigate(`/user-shared-video/${currentUser.uid}`);
       } else {
         alert('Link video not valid.')
       }
