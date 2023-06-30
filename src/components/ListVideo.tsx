@@ -62,7 +62,7 @@ const ListVideo = ({ videos, isShowReaction = true, showActions }: PropsType) =>
 
   return (
     <>
-      <div className='flex flex-wrap'>
+      <div className='flex flex-wrap justify-center'>
         <div className='w-full xl:w-1/2'>
           <input value={keyword} onChange={handleChangeKeyword} type="text" placeholder='Search by video name, author name,...' />
         </div>

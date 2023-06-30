@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { ReactSVG } from 'react-svg'
 
 import { VideoType } from "@/types/Video"
 import { selectCurrentUser } from '@/store/authSlice'
@@ -7,6 +8,8 @@ import { selectCurrentUser } from '@/store/authSlice'
 import VideoServices from '@/firebase/video/video'
 import { formatDate, preventEvents } from '@/utils/utils'
 import { Link } from 'react-router-dom'
+import LikeBtnIcon from '@/icons/like-button-icon.svg'
+import DislikeBtnIcon from '@/icons/dislike-button-icon.svg'
 
 type PropsType = {
   isShowReaction: boolean,
@@ -55,12 +58,6 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
       <div className='flex-1'>
         <h5 className="font-bold underline">{ video.title }</h5>
         <div><span className="font-semibold">Shared by:</span> <Link to={`/user-shared-video/${video.authorId}`}>{ video.authorEmail }</Link></div>
-        {isShowReaction && (
-          <div className="flex items-center">
-            <button onClick={(event) => reaction(event, video, 'like')} className={["btn font-bold border-2 rounded-sm hover:scale-125", checkIsLiked(video) ? 'text-white bg-blue-600 scale-125' : 'text-blue-600 hover:text-white hover:bg-blue-600'].join(' ')}>Like</button>
-            <button onClick={(event) => reaction(event, video, 'dislike')} className={["btn font-bold border-2 rounded-sm hover:scale-125 ml-4", checkIsDisLiked(video) ? 'text-white bg-gray-600 scale-125' : 'text-gray-600 hover:text-white hover:bg-gray-600'].join(' ')}>DisLike</button>
-          </div>
-        )}
         <div className="flex justify-between items-center">
           <div>
             <span><span className="font-semibold">Like:</span> { video.likedBy?.length || 0 }</span>
@@ -71,6 +68,16 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
             { formatDate(video.createdAt, 'fromNow') }
           </div>
         </div>
+        {isShowReaction && (
+          <div className="flex items-center">
+            <button onClick={(event) => reaction(event, video, 'like')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4", checkIsLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
+              <ReactSVG src={LikeBtnIcon} width={30} height={30} wrapper='svg' />
+            </button>
+            <button onClick={(event) => reaction(event, video, 'dislike')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4 ml-4", checkIsDisLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
+              <ReactSVG src={DislikeBtnIcon} width={30} height={30} wrapper='svg' />
+            </button>
+          </div>
+        )}
         {showDescription && (
           <>
             <div className="font-semibold">Description:</div>

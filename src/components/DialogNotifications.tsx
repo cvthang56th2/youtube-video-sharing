@@ -39,7 +39,8 @@ const DialogNotifications = (props: { close: () => void }) => {
   }, [])
 
 
-  const seenNotification = (notify: NotificationType) => {
+  const seenNotification = (event: { preventDefault: () => void; stopPropagation: () => void }, notify: NotificationType) => {
+    preventEvents(event)
     if (!notify.id || !currentUser) {
       return
     }
@@ -56,7 +57,7 @@ const DialogNotifications = (props: { close: () => void }) => {
     <>
       <div className="absolute top-full left-0 md:left-1/2 md:-translate-x-1/2 w-[500px] max-w-[80vw] max-h-[400px] overflow-y-auto bg-white text-gray-900 shadow-md z-20" onClick={preventEvents}>
         {notifications.length ? notifications.map((notify, nIndex) => (
-          <div className="hover:bg-gray-100 px-3 py-1 border-b-[1px]" key={`notify-${nIndex}`}>
+          <div className="hover:bg-gray-100 px-3 py-1 border-b-[1px] cursor-pointer" key={`notify-${nIndex}`} onClick={() => watchVideo(notify.videoId)}>
             <div className='flex items-center'>
               <div className="flex-[0_0_70px] h-[40px] relative rounded-md">
                 <img src={notify.videoThumbnailUrl} className="absolute inset-0 w-full h-full object-cover !m-0" />
@@ -76,7 +77,7 @@ const DialogNotifications = (props: { close: () => void }) => {
             </div>
             <div className='text-right mb-1'>
               <button onClick={() => watchVideo(notify.videoId)} className='btn btn-blue'>Watch Now</button>
-              <button onClick={() => seenNotification(notify)} className='btn btn-green ml-4'>Checked</button>
+              <button onClick={(event) => seenNotification(event, notify)} className='btn btn-green ml-4'>Checked</button>
             </div>
           </div>
         )) : (
