@@ -8,7 +8,7 @@ import UserServices from '@/firebase/user/user'
 import NotificationServices from '@/firebase/notification/notification'
 
 import { selectCurrentUser } from '@/store/authSlice'
-import { getYoutubeInfoUrl } from '@/constants/constants'
+import { getYoutubeInfoUrl } from '@/utils/utils'
 import { YoutubeVideo } from '@/types/Video'
 import RecommendLogin from '@/components/RecommendLogin';
 

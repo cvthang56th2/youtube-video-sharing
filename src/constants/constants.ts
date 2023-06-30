@@ -1,1 +1,0 @@
-export const getYoutubeInfoUrl = (ytVideoId: string, apiKey: string) => `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ytVideoId}&key=${apiKey}`

@@ -55,3 +55,5 @@ export const toLowerCaseNonAccentVietnamese = (str: string) => {
   str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // Â, Ê, Ă, Ơ, Ư
   return str;
 }
+
+export const getYoutubeInfoUrl = (ytVideoId: string, apiKey: string) => `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ytVideoId}&key=${apiKey}`
