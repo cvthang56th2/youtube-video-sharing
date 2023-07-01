@@ -62,10 +62,11 @@ const ListVideo = ({ videos, isShowReaction = true, showActions }: PropsType) =>
 
   return (
     <>
-      <div className='flex flex-wrap justify-center'>
+      <div className='flex justify-center items-center'>
         <div className='w-full xl:w-1/2'>
           <input className='input-search' value={keyword} onChange={handleChangeKeyword} type="text" placeholder='Search by video name, author name,...' />
         </div>
+        <button type='button' className='font-semibold hover:bg-slate-500 hover:text-white px-3 py-1 ml-2 border-2 rounded-md transition-all duration-250 ease-linear' onClick={() => setKeyword('')}>Clear</button>
       </div>
       <div className='list-video flex flex-wrap -mx-3 mt-4'>
         {videosMemo.map((video: VideoType, vIndex: number) => (

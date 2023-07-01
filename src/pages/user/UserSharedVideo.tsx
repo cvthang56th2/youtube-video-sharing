@@ -51,7 +51,10 @@ const UserSharedVideo = () => {
   return (
     <div>
       <div className='text-center'>
-        <h2 className='!mt-0'>User Shared Video</h2>
+        <h2 className='!m-0'>User Shared Video</h2>
+        {userData && (
+          <h3 className='!mt-0 !mb-4'>{userData.email}</h3>
+        )}
       </div>
       <div className='relative'>
         {userData ? (
