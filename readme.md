@@ -74,7 +74,8 @@ I have used firebase to build many of my small and medium applications, I like i
   - Create collections: [users](/src/types/User.ts), [videos](/src/types/Video.ts), [notifications](/src/types/Notification.ts) with fields as defined specified in `src/types/<collection>.ts`.
     ![Firestore Collections](readme\images\firestore-collections.png)
 
-- Backend - firebase will be configured in the directory `/src/firebase`
+- Backend - firebase will used as services and located in the directory `/src/firebase`
+  ![Firebase folder](readme\images\firebase-folder.png)
 
 ## 5. Indexes
 
@@ -101,6 +102,7 @@ Cloud Firestore ensures query performance by requiring an index for every query.
   This source has Unit test functions in utils, Unit test React Components.
 
   Test folder is located in `/src/__tests__`
+  ![test folder](readme\images\test-folder.png)
 
   - Run test:
 
