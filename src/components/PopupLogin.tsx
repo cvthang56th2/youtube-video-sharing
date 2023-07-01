@@ -96,7 +96,7 @@ const PopupLogin = (props: PropsType) => {
           </>
         )}
         <div className="text-right">
-          <button type="button" className="underline mt-2 italic" onClick={() => setIsRegister(!isRegister)}>
+          <button type="button" className="underline mt-2 italic switch-form-btn" onClick={() => setIsRegister(!isRegister)}>
             {isRegister ? 'Back to Login' : "Don't have an account? Register now."}
           </button>
         </div>

@@ -13,7 +13,7 @@ interface PropsType {
 const Popup = ({ width, isShow, title = 'Popup', saveText = 'Save', cancelText = 'Cancel', wrapperClasses = '', ...props }: PropsType) => {
   return (
     <div className={["popup w-[100svw] h-[100svh] fixed inset-0 z-10 overflow-y-auto flex items-center justify-center", isShow ? 'bg-[rgba(0,0,0,0.2)]' : 'pointer-events-none', wrapperClasses].join(' ')}>
-      <div className={["bg-white max-w-[95%] max-h-[95%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out", isShow ? 'transform-none' : 'scale-0'].join(' ')} style={{ width }}>
+      <div className={["bg-white max-w-[95%] max-h-[95%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out content-popup", isShow ? 'transform-none' : 'scale-0'].join(' ')} style={{ width }}>
         {isShow && (
           <>
             <div className="border-b-2">
