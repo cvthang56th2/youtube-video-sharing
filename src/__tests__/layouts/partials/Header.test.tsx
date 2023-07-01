@@ -9,9 +9,6 @@ import { Provider } from 'react-redux'
 vi.mock('react-router-dom', () => ({
   Link: ({children}: { children: React.ReactNode }) => (<div>{children}</div>)
 }))
-vi.mock('@/components/Confirm', () => ({
-  default: () => (<div>Confirm</div>)
-}))
 vi.mock('@/components/DialogNotifications', () => ({
   default: () => (<div>DialogNotifications</div>)
 }))
@@ -26,6 +23,7 @@ vi.mock('@/firebase/auth/auth', () => ({
     logout: vi.fn(),
   }
 }))
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 describe('Header', () => {
   it('Should show login/register button when user not logged', async () => {
@@ -58,9 +56,17 @@ describe('Header', () => {
     }
     const mockStore = configureStore()
     const store = mockStore(initialState)
-    await act( async () => render(<Provider store={store}><Header /></Provider>));
+    const wrapper = await act( async () => render(<Provider store={store}><Header /></Provider>));
 
     expect(screen.getByText(`Welcome: ${initialState.auth.currentUser.email}`)).toBeInTheDocument()
+    fireEvent.click(screen.getByText(`Logout`))
     
+    act(async () => {
+      const yesBtn = wrapper.container.querySelector('.popup .yes-btn')
+      expect(yesBtn).toBeTruthy()
+      fireEvent.click(yesBtn as HTMLElement)
+      await sleep(50)
+      expect(screen.getByText(`Login / Register`)).toBeInTheDocument()
+    })
   })
 })
