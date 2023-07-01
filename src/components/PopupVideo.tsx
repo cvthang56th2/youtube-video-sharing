@@ -22,7 +22,6 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
   const getVideoData = async () => {
     try {
       const data = await VideoServices.getVideoById(videoId)
-      console.log('datadatadatadatadatadatadatadatadatadata', data)
       setVideoData(data)
     } catch (error) {
       console.log(error)

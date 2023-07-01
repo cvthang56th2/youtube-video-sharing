@@ -75,7 +75,7 @@ describe('PopupLogin', () => {
 
     const mockAuthServices = await import('@/firebase/auth/auth')
     const mError = new Error('Unable to retrieve rows')
-    mockAuthServices.default.loginWithEmail.mockRejectedValueOnce(mError)
+    mockAuthServices.default.loginWithEmail = vi.fn().mockRejectedValueOnce(mError)
     const yesBtn = wrapper.container.querySelector('.popup .yes-btn')
     expect(yesBtn).toBeTruthy()
     fireEvent.change(inputEmail as HTMLElement, { target: { value: formLogin.email } })
@@ -141,7 +141,7 @@ describe('PopupLogin', () => {
 
     const mockAuthServices = await import('@/firebase/auth/auth')
     const mError = new Error('Unable to retrieve rows')
-    mockAuthServices.default.register.mockRejectedValueOnce(mError)
+    mockAuthServices.default.register = vi.fn().mockRejectedValueOnce(mError)
     const yesBtn = wrapper.container.querySelector('.popup .yes-btn')
     expect(yesBtn).toBeTruthy()
     fireEvent.change(inputUserName as HTMLElement, { target: { value: formRegister.userName } })
