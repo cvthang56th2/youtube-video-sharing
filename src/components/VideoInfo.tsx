@@ -60,9 +60,9 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
         <div><span className="font-semibold">Shared by:</span> <Link to={`/user-shared-video/${video.authorId}`}>{ video.authorEmail }</Link></div>
         <div className="flex justify-between items-center">
           <div>
-            <span><span className="font-semibold">Like:</span> { video.likedBy?.length || 0 }</span>
+            <span><span className="font-semibold">Like:</span> <span className='count-like'>{ video.likedBy?.length || 0 }</span></span>
             <span className="mx-4">-</span>
-            <span><span className="font-semibold">Dislike:</span> { video.dislikedBy?.length || 0 }</span>
+            <span><span className="font-semibold">Dislike:</span> <span className='count-dislike'>{ video.dislikedBy?.length || 0 }</span></span>
           </div>
           <div className='italic text-base my-0'>
             { formatDate(video.createdAt, 'fromNow') }
@@ -70,10 +70,10 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
         </div>
         {isShowReaction && (
           <div className="flex items-center">
-            <button onClick={(event) => reaction(event, video, 'like')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4", checkIsLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
+            <button onClick={(event) => reaction(event, video, 'like')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4 like-btn", checkIsLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
               <ReactSVG src={LikeBtnIcon} width={30} height={30} wrapper='svg' />
             </button>
-            <button onClick={(event) => reaction(event, video, 'dislike')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4 ml-4", checkIsDisLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
+            <button onClick={(event) => reaction(event, video, 'dislike')} className={["rounded-full hover:scale-125 transition-all duration-100 ease-in-out border-4 ml-4 dislike-btn", checkIsDisLiked(video) ? 'border-blue-500' : 'border-transparent'].join(' ')}>
               <ReactSVG src={DislikeBtnIcon} width={30} height={30} wrapper='svg' />
             </button>
           </div>
@@ -81,7 +81,7 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
         {showDescription && (
           <>
             <div className="font-semibold">Description:</div>
-            <div onClick={() => setShownMore(!shownMore)}>
+            <div className='description' onClick={() => setShownMore(!shownMore)}>
               {video.description.length <= 200 ? video.description : (
                 <div>
                   { shownMore ? video.description : video.description.substring(0, 200) + '...' }

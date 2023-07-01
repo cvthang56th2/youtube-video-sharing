@@ -22,6 +22,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
   const getVideoData = async () => {
     try {
       const data = await VideoServices.getVideoById(videoId)
+      console.log('datadatadatadatadatadatadatadatadatadata', data)
       setVideoData(data)
     } catch (error) {
       console.log(error)
@@ -45,7 +46,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
     <>
       <div className={["w-[100svw] h-[100svh] fixed inset-0 z-50 overflow-y-auto flex items-center justify-center", isShow ? 'bg-[rgba(0,0,0,0.2)]' : 'pointer-events-none'].join(' ')} onClick={() => close()}>
         {isShow && (
-          <button className="absolute top-2 right-2 z-10 border-2 border-black bg-white rounded-full text-3xl px-[6px] hover:text-red-500" onClick={() => close()}>&#10005;</button>
+          <button className="close-btn absolute top-2 right-2 z-10 border-2 border-black bg-white rounded-full text-3xl px-[6px] hover:text-red-500" onClick={() => close()}>&#10005;</button>
         )}
         <div className={["bg-white w-[1024px] max-w-[90%] max-h-[90%] p-5 rounded-xl shadow-2xl overflow-y-auto flex flex-col transition-all duration-300 ease-in-out relative", isShow ? 'transform-none' : 'scale-0'].join(' ')} onClick={preventEvents}>
           {isShow && (
