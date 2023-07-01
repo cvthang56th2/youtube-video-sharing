@@ -20,6 +20,9 @@ describe('formatDate', () => {
     expect(formatDate(date)).toBe('30/06/2023 12:34');
   });
 
+  it('should format the date correctly with a number', () => {
+    expect(formatDate(1688103296000, 'YYYY-MM-DD')).toBe('2023-06-30');
+  });
   it('should format the date correctly with custom format', () => {
     const date = new Date('2023-06-30T12:34:56');
     expect(formatDate(date, 'YYYY-MM-DD')).toBe('2023-06-30');
