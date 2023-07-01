@@ -43,7 +43,7 @@ const videos: VideoType[] = [{
   likedBy: [],
   createdAt: new Date(),
   dislikedBy: [],
-  isPrivate: true
+  isPrivate: false
 }]
 vi.mock('react-router-dom', () => ({
   Link: ({children}: { children: React.ReactNode }) => (<div className='link'>{children}</div>)
@@ -53,7 +53,8 @@ vi.mock('react-svg', () => ({
 }))
 vi.mock('@/firebase/video/video', () => ({
   default: {
-    getVideoById: () => (videos[0])
+    getVideoById: () => (videos[0]),
+    updateVideo: vi.fn()
   }
 }))
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -138,6 +139,10 @@ describe('ListVideo', () => {
     expect((el.querySelector('.link') as HTMLElement)?.innerText).toBe(videoData.authorEmail)
     expect(Number((el.querySelector('.count-like') as HTMLElement)?.innerText)).toBe(videoData.likedBy.length)
     expect(Number((el.querySelector('.count-dislike') as HTMLElement)?.innerText)).toBe(videoData.dislikedBy.length)
+
+    fireEvent.click(wrapper.container.querySelector('.clear-btn') as HTMLElement)
+    const afterVideoEls = wrapper.container.querySelectorAll('.video-item')
+    expect(afterVideoEls.length).toBe(videos.length)
   })
 
   it('Should open popup video when click video box', async () => {
@@ -156,5 +161,20 @@ describe('ListVideo', () => {
     const closeBtn = wrapper.container.querySelector('.close-btn')
     expect(closeBtn).toBeTruthy()
     fireEvent.click(closeBtn as HTMLElement)
+  })
+  it('Should call update video function when click Change status button', async () => {
+    // we are firestore snapshot for videos => just need to call update data (add uid to seenBy of video), when data is updated => video will disappear. dont need to check show list again
+    const wrapper = await act( async () => render(<Provider store={store}><ListVideo videos={videos} isShowReaction={false} showActions /></Provider>));
+    const videoEls = wrapper.container.querySelectorAll('.video-item')
+    expect(videoEls.length).toBe(videos.length)
+    const el = videoEls[0]
+    const btnChangeStatus = el.querySelector('.btn-change-status') as HTMLElement
+    expect(btnChangeStatus).toBeTruthy()
+    const mockVideoServices = await import('@/firebase/video/video')
+    fireEvent.click(btnChangeStatus)
+    const yesBtn = wrapper.container.querySelector('.popup .yes-btn')
+    expect(yesBtn).toBeTruthy()
+    fireEvent.click(yesBtn as HTMLElement)
+    expect(mockVideoServices.default.updateVideo).toBeCalled()
   })
 })
