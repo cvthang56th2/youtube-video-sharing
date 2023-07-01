@@ -102,6 +102,7 @@ Cloud Firestore ensures query performance by requiring an index for every query.
   This source has Unit test functions in utils, Unit test React Components.
 
   Test folder is located in `/src/__tests__`
+
   ![test folder](./readme/images/test-folder.png)
 
   - Run test:
