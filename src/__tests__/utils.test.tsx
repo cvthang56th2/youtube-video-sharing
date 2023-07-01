@@ -79,7 +79,7 @@ describe('snapshotToArray', () => {
   });
 
   it('should return an empty array if the input snapshot is empty', () => {
-    const result = snapshotToArray([]);
+    const result = snapshotToArray(null);
     expect(result).toEqual([]);
   });
 });

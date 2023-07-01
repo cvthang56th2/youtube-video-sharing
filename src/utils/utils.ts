@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { QuerySnapshot, DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 
-export const snapshotToArray = (snapshot: QuerySnapshot<DocumentData>): DocumentData[] => {
+export const snapshotToArray = (snapshot: QuerySnapshot<DocumentData> | null): DocumentData[] => {
   const data: DocumentData[] = [];
   if (snapshot) {
     snapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {

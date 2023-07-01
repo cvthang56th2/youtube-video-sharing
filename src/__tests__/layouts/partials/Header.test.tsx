@@ -41,7 +41,7 @@ describe('Header', () => {
 
     expect(screen.getByText(`Login / Register`)).toBeInTheDocument()
     fireEvent.click(screen.getByText(`Login / Register`))
-    expect(wrapper.container.querySelector('.popup .text-2xl')?.innerText).toBe('Login')
+    expect((wrapper.container.querySelector('.popup .text-2xl') as HTMLElement)?.innerText).toBe('Login')
   })
   it('Should show welcome user when user logged', async () => {
     const initialState = {

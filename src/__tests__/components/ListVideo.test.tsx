@@ -93,9 +93,9 @@ describe('ListVideo', () => {
       const el = videoEls[index]
       const videoData = videos[index]
       expect(el.querySelector('h5')?.innerText).toBe(videoData.title)
-      expect(el.querySelector('.link')?.innerText).toBe(videoData.authorEmail)
-      expect(Number(el.querySelector('.count-like')?.innerText)).toBe(videoData.likedBy.length)
-      expect(Number(el.querySelector('.count-dislike')?.innerText)).toBe(videoData.dislikedBy.length)
+      expect((el.querySelector('.link') as HTMLElement)?.innerText).toBe(videoData.authorEmail)
+      expect(Number((el.querySelector('.count-like') as HTMLElement)?.innerText)).toBe(videoData.likedBy.length)
+      expect(Number((el.querySelector('.count-dislike') as HTMLElement)?.innerText)).toBe(videoData.dislikedBy.length)
       expect(el.querySelector('.like-btn')).toBeTruthy()
       expect(el.querySelector('.dislike-btn')).toBeTruthy()
       expect(el.querySelector('.status-badge')).toBeFalsy()
@@ -111,15 +111,15 @@ describe('ListVideo', () => {
       const el = videoEls[index]
       const videoData = videos[index]
       expect(el.querySelector('h5')?.innerText).toBe(videoData.title)
-      expect(el.querySelector('.link')?.innerText).toBe(videoData.authorEmail)
-      expect(Number(el.querySelector('.count-like')?.innerText)).toBe(videoData.likedBy.length)
-      expect(Number(el.querySelector('.count-dislike')?.innerText)).toBe(videoData.dislikedBy.length)
+      expect((el.querySelector('.link') as HTMLElement)?.innerText).toBe(videoData.authorEmail)
+      expect(Number((el.querySelector('.count-like') as HTMLElement)?.innerText)).toBe(videoData.likedBy.length)
+      expect(Number((el.querySelector('.count-dislike') as HTMLElement)?.innerText)).toBe(videoData.dislikedBy.length)
       expect(el.querySelector('.like-btn')).toBeFalsy()
       expect(el.querySelector('.dislike-btn')).toBeFalsy()
       expect(el.querySelector('.status-badge')).toBeTruthy()
-      expect(el.querySelector('.status-badge')?.innerText).toBe(videoData.isPrivate ? 'Private' : 'Public')
+      expect((el.querySelector('.status-badge') as HTMLElement)?.innerText).toBe(videoData.isPrivate ? 'Private' : 'Public')
       expect(el.querySelector('.btn-change-status')).toBeTruthy()
-      expect(el.querySelector('.btn-change-status')?.innerText).toBe(videoData.isPrivate ? 'Change To Public' : 'Change To Private')
+      expect((el.querySelector('.btn-change-status') as HTMLElement)?.innerText).toBe(videoData.isPrivate ? 'Change To Public' : 'Change To Private')
     }
   })
 
@@ -135,9 +135,9 @@ describe('ListVideo', () => {
     const el = videoEls[0]
     const videoData = videos[0]
     expect(el.querySelector('h5')?.innerText).toBe(videoData.title)
-    expect(el.querySelector('.link')?.innerText).toBe(videoData.authorEmail)
-    expect(Number(el.querySelector('.count-like')?.innerText)).toBe(videoData.likedBy.length)
-    expect(Number(el.querySelector('.count-dislike')?.innerText)).toBe(videoData.dislikedBy.length)
+    expect((el.querySelector('.link') as HTMLElement)?.innerText).toBe(videoData.authorEmail)
+    expect(Number((el.querySelector('.count-like') as HTMLElement)?.innerText)).toBe(videoData.likedBy.length)
+    expect(Number((el.querySelector('.count-dislike') as HTMLElement)?.innerText)).toBe(videoData.dislikedBy.length)
   })
 
   it('Should open popup video when click video box', async () => {
