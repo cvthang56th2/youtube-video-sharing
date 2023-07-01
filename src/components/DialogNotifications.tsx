@@ -57,14 +57,14 @@ const DialogNotifications = (props: { close: () => void }) => {
     <>
       <div className="absolute top-full left-0 md:left-1/2 md:-translate-x-1/2 w-[500px] max-w-[80vw] max-h-[400px] overflow-y-auto bg-white text-gray-900 shadow-md z-20" onClick={preventEvents}>
         {notifications.length ? notifications.map((notify, nIndex) => (
-          <div className="hover:bg-gray-100 px-3 py-1 border-b-[1px] cursor-pointer" key={`notify-${nIndex}`} onClick={() => watchVideo(notify.videoId)}>
+          <div className="notification-item hover:bg-gray-100 px-3 py-1 border-b-[1px] cursor-pointer" key={`notify-${nIndex}`} onClick={() => watchVideo(notify.videoId)}>
             <div className='flex items-center'>
               <div className="flex-[0_0_70px] h-[40px] relative rounded-md">
                 <img src={notify.videoThumbnailUrl} className="absolute inset-0 w-full h-full object-cover !m-0" />
               </div>
               <div className="w-2/3 ml-2">
-                <div className="text-md font-semibold truncate" title="abc">{notify.videoTitle}</div>
-                <div className="text-base truncate" title="abcd">{notify.authorEmail}</div>
+                <div className="text-md font-semibold truncate video-title" title={notify.videoTitle}>{notify.videoTitle}</div>
+                <div className="text-base truncate author-email" title={notify.authorEmail}>{notify.authorEmail}</div>
               </div>
               <div className="w-1/3 text-right">
                 <div className="text-sm">
@@ -76,8 +76,8 @@ const DialogNotifications = (props: { close: () => void }) => {
               </div>
             </div>
             <div className='text-right mb-1'>
-              <button onClick={() => watchVideo(notify.videoId)} className='btn btn-blue'>Watch Now</button>
-              <button onClick={(event) => seenNotification(event, notify)} className='btn btn-green ml-4'>Checked</button>
+              <button onClick={() => watchVideo(notify.videoId)} className='btn btn-blue watch-now-btn'>Watch Now</button>
+              <button onClick={(event) => seenNotification(event, notify)} className='btn btn-green check-btn ml-4'>Checked</button>
             </div>
           </div>
         )) : (
