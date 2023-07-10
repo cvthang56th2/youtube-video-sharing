@@ -70,7 +70,7 @@ const PopupVideo = ({ isShow, close, videoId, isShowReaction = true }: PropsType
                         </div>
                       </div>
                       <div className="flex-1 overflow-y-auto mt-4">
-                        <VideoInfo isShowReaction={isShowReaction} video={videoData} />
+                        <VideoInfo isShowReaction={isShowReaction} video={videoData} onSubmitComment={getVideoData} />
                       </div>
                     </>
                   )}

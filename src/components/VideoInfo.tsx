@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { SetStateAction, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ReactSVG } from 'react-svg'
 
@@ -15,12 +15,29 @@ type PropsType = {
   isShowReaction: boolean,
   video: VideoType,
   showDescription?: boolean,
+  onSubmitComment?: () => void
 }
 
-const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType) => {
+const VideoInfo = ({ isShowReaction, video, showDescription = true, onSubmitComment  }: PropsType) => {
   const currentUser = useSelector(selectCurrentUser)
 
   const [shownMore, setShownMore] = useState(false)
+  const [inputComment, setInputComment] = useState('')
+  const changeInputComment = (event: { target: { value: SetStateAction<string> } }) => {
+    setInputComment(event.target.value)
+  }
+  const submitComment = async (event: { preventDefault: () => void; stopPropagation: () => void }) => {
+    preventEvents(event)
+    await VideoServices.updateVideo(video.id, {
+      comments: [...(video.comments || []), {
+        userId: currentUser?.uid,
+        description: inputComment
+      }]
+    })
+    if (typeof onSubmitComment === 'function') {
+      onSubmitComment()
+    }
+  }
   const checkIsLiked = (video: VideoType): boolean => video.likedBy.includes(currentUser?.uid || '')
   const checkIsDisLiked = (video: VideoType): boolean => video.dislikedBy.includes(currentUser?.uid || '')
 
@@ -91,6 +108,26 @@ const VideoInfo = ({ isShowReaction, video, showDescription = true  }: PropsType
             </div>
           </>
         )}
+        <div>
+          <h5>Comments</h5>
+          {currentUser && (
+            <div>
+              <input value={inputComment} name="comment" rows="5" placeholder='Comment...' className='w-full border-2 rounded-md' onChange={changeInputComment}></input>  
+              <button type="submit" className='btn btn-green' onClick={submitComment}>Submit</button>
+            </div>
+          )}
+          <div className='mt-5'>
+            {(video.comments || []).length ? (
+              (video.comments || []).map((comment, cIndex) => (
+                <div key={`video-${video.id}-comment-${cIndex}`}>
+                  {comment.userId}: {comment.description}
+                </div>
+              ))
+            ) : (
+              <div>No Comment added yet.</div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
